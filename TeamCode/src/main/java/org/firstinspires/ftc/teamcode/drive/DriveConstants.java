@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.qualcomm.hardware.motors.GoBILDA5202Series;
 import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+
+import org.firstinspires.ftc.teamcode.drive.hardware.GoBILDA5202Series_435RPM;
 
 /*
  * Constants shared between multiple drive types.
@@ -21,19 +24,20 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 public class DriveConstants {
 
     /*
+
      * The type of motor used on the drivetrain. While the SDK has definitions for many common
      * motors, there may be slight gear ratio inaccuracies for planetary gearboxes and other
      * discrepancies. Additional motor types can be defined via an interface with the
      * @DeviceProperties and @MotorType annotations.
      */
     private static final MotorConfigurationType MOTOR_CONFIG =
-            MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
+            MotorConfigurationType.getMotorType(GoBILDA5202Series_435RPM.class);
 
     /*
      * Set the first flag appropriately. If using the built-in motor velocity PID, update
      * MOTOR_VELO_PID with the tuned coefficients from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = true;
+    public static final boolean RUN_USING_ENCODER = false;
     public static final PIDCoefficients MOTOR_VELO_PID = null;
 
     /*
@@ -46,7 +50,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 2;
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1;
+    public static double TRACK_WIDTH = 1.9;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -67,8 +71,8 @@ public class DriveConstants {
      * forces acceleration-limited profiling).
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            30.0, 30.0, 0.0,
-            Math.toRadians(180.0), Math.toRadians(180.0), 0.0
+            30.0, 30.0, 30.0,
+            Math.toRadians(180.0), Math.toRadians(180.0), Math.toRadians(180.0)
     );
 
 
