@@ -29,7 +29,7 @@ public class TeleOp_Colect extends OpMode {
     private DcMotorEx scissorDreapta;
     private DcMotorEx scissorStanga;
     private DcMotor motorColectSt, motorColectDr;
-    private Servo servoclamp, servoPlatformaSt, servoPlatformaDr, servoCapstone,servoParcare;
+    private Servo servoclamp, servoPlatformaSt, servoPlatformaDr, servoCapstone;
     private ServoImplEx vexSt, vexDr;
     /**
      * variable for changing the movement speed of the robot
@@ -142,11 +142,11 @@ public class TeleOp_Colect extends OpMode {
 
                 if(gamepad1.left_trigger > 0 && servoParcarePosition < 1){
                     servoParcarePosition += gamepad1.left_trigger/40;
-                    servoParcare.setPosition(servoParcarePosition);
+                   // servoParcare.setPosition(servoParcarePosition);
                 }
                 else if(gamepad1.right_trigger > 0 && servoParcarePosition > 0.4){
                     servoParcarePosition -= gamepad1.right_trigger/40;
-                    servoParcare.setPosition(servoParcarePosition);
+                    //servoParcare.setPosition(servoParcarePosition);
                 }
 
                 servoCapstone.setPosition((gamepad2.right_trigger) / 2);
@@ -255,7 +255,7 @@ public class TeleOp_Colect extends OpMode {
         servoPlatformaDr = hardwareMap.servo.get(configs.servoPlatformaDrName);
         servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
         servoCapstone = hardwareMap.servo.get("capstone");
-        servoParcare = hardwareMap.servo.get("parcare");
+       // servoParcare = hardwareMap.servo.get("parcare");
 
         vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
         vexSt = hardwareMap.get(ServoImplEx.class, "vexSt");
@@ -292,7 +292,7 @@ public class TeleOp_Colect extends OpMode {
         sysTime= System.currentTimeMillis();
         servoclamp.setPosition(0.7);
         servoCapstone.setPosition(0);
-        servoParcare.setPosition(servoParcarePosition);
+      //  servoParcare.setPosition(servoParcarePosition);
         /**start the thread*/
         Colect.start();
         Chassis.start();
@@ -307,6 +307,7 @@ public class TeleOp_Colect extends OpMode {
         telemetry.addData("TouchscSt", touchScissorSt.isPressed());
         telemetry.addData("scDr",scissorDreapta.getCurrentPosition());
         telemetry.addData("scSt",scissorStanga.getCurrentPosition());
+        telemetry.addData("power df: ",motordf.getPower() );
         telemetry.update();
     }
 

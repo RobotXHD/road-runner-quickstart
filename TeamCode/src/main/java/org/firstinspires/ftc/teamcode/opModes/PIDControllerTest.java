@@ -114,7 +114,7 @@ public class PIDControllerTest extends LinearOpMode {
                 ss /= max;
             }
 
-            power(ds, df, ss, sf);
+            // power(ds, df, ss, sf);
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("P", pidRotatie.getP() * pidRotatie.getError());
             packet.put("I", pidRotatie.getI() * pidRotatie.getISum());

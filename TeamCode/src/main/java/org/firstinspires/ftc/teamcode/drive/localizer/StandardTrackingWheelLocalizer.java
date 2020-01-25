@@ -17,15 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 /*
- * Sample tracking wheel localizer implementation assuming the standard configuration:
+ * Tracking wheel localizer implementation assuming the following configuration:
  *
  *    /--------------\
- *    |     ____     |
- *    |     ----     |
+ *    |              |
+ *    |              |
  *    | ||        || |
  *    | ||        || |
  *    |              |
- *    |              |
+ *    |     ====     |
  *    \--------------/
  *
  * Note: this could be optimized significantly with REV bulk reads
@@ -33,7 +33,7 @@ import java.util.List;
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 4000;
-    public static double WHEEL_RADIUS = 2; // in
+    public static double WHEEL_RADIUS = 1.182; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double LATERAL_DISTANCE = 7.97244094488 * 2; // in; distance between the left and right wheels 405/2.54
