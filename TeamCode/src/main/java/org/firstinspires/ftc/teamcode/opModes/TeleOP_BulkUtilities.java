@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -15,40 +17,47 @@ import org.openftc.revextensions2.RevBulkData;
 @TeleOp
 public class TeleOP_BulkUtilities extends OpMode {
 
+    FtcDashboard dashboard = FtcDashboard.getInstance();
     private RevBulkData bulkData;
     private ExpansionHubMotor encoderDreapta, encoderSpate, encoderStanga;
-    private ExpansionHubEx expansionHub;
-    private ExpansionHubMotor motorss, motorsf, motords, motordf;
-    private long encoderDrTotal,encoderStTotal, encoderSpTotal, rotatieTarget;
-    private volatile double rotatie;
-    public double ticksPerDegree = 70.2335277777777;//70.1445833333333333
+    private ExpansionHubEx expansionHubSasiu, expansionHubSisteme;
+    private ExpansionHubMotor motorss, motorsf, motords, motordf, scissorSt, scissorDr, colectSt, colectDr;
     private volatile long encDr, encSt, encSp;
     private volatile boolean stop = false;
 
     private Thread encoderRead = new Thread(new Runnable() {
-        long st, dr, sp;
         @Override
         public void run() {
             while(!stop){
-                bulkData = expansionHub.getBulkInputData();
-                st = bulkData.getMotorCurrentPosition(encoderStanga);
-                sp = bulkData.getMotorCurrentPosition(encoderSpate);
-                dr = bulkData.getMotorCurrentPosition(encoderDreapta);
-                encDr = dr;
-                encSp = sp;
-                encSt = st;
-                rotatie = ((dr - st)/2.0)/ticksPerDegree;
+                bulkData = expansionHubSasiu.getBulkInputData();
+                TelemetryPacket packet = new TelemetryPacket();
+                packet.put("Motordf",bulkData.getMotorCurrentPosition(motordf));
+                packet.put("Motorss",bulkData.getMotorCurrentPosition(motorss));
+                packet.put("Motorsf",bulkData.getMotorCurrentPosition(motorsf));
+                packet.put("Motords",bulkData.getMotorCurrentPosition(motords));
+                bulkData = expansionHubSisteme.getBulkInputData();
+                packet.put("scissorDr",bulkData.getMotorCurrentPosition(scissorDr));
+                packet.put("scissorSt",bulkData.getMotorCurrentPosition(scissorSt));
+                packet.put("colectDr",bulkData.getMotorCurrentPosition(colectDr));
+                packet.put("colectSt",bulkData.getMotorCurrentPosition(colectSt));
+                dashboard.sendTelemetryPacket(packet);
             }
         }
     });
 
     @Override
     public void init() {
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubOdometrieName);
+        expansionHubSasiu = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubOdometrieName);
+        expansionHubSisteme = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
         motorss = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.ssName);
         motords = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.dsName);
         motorsf = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.sfName);
         motordf = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.dfName);
+
+        scissorDr = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.scissorDrName);
+        scissorSt = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.scissorStName);
+        colectDr = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.colectDrName);
+        colectSt = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.colectStName);
 
         encoderDreapta = motorss;
         encoderSpate = motorsf;
@@ -87,10 +96,7 @@ public class TeleOP_BulkUtilities extends OpMode {
         motords.setPower(-gamepad1.right_stick_x/3);
         motorsf.setPower(gamepad1.right_stick_x/3);
         motorss.setPower(gamepad1.right_stick_x/3);
-        telemetry.addData("EncoderDreapta", encDr);
-        telemetry.addData("EncoderStanga", encSt);
-        telemetry.addData("Rotatie", rotatie);
-        telemetry.update();
+
     }
 
     @Override

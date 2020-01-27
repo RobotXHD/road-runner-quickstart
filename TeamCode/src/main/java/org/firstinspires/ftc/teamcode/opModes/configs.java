@@ -25,11 +25,11 @@ public class  configs {
     public static final String dsName = "ds";
     public static final String sfName = "sf";
     public static final String ssName = "ss";
-    //ss = spate; sf = stanga; df = dreapta
+    //scissorDr = spate; colectDr = stanga; colectsSt = dr
 
-    public static final String encStName = "sf";
-    public static final String encSpName = "ss";
-    public static final String encDrName = "df";
+    public static final String encStName = "colectDr";
+    public static final String encSpName = "scissorDr";
+    public static final String encDrName = "colectSt";
 
     public static final String scissorDrName = "scissorDr";
     public static final String scissorStName = "scissorSt";

@@ -9,8 +9,8 @@ import com.acmerobotics.roadrunner.path.Path;
  * Set of helper functions for drawing Road Runner paths and trajectories on dashboard canvases.
  */
 public class DashboardUtil {
-    private static final double DEFAULT_RESOLUTION = 2.0; // distance units; presumed inches
-    private static final double ROBOT_RADIUS = 9; // in
+    private static final double DEFAULT_RESOLUTION = 1; // distance units; presumed inches
+    private static final double ROBOT_RADIUS = 1; // in
 
 
     public static void drawSampledPath(Canvas canvas, Path path, double resolution) {
