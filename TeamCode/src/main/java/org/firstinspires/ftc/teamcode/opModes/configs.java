@@ -25,7 +25,7 @@ public class  configs {
     public static final String dsName = "ds";
     public static final String sfName = "sf";
     public static final String ssName = "ss";
-    //scissorDr = spate; colectDr = stanga; colectsSt = dr
+    //scissorDr = spate; colectDr = stanga; colectsSt = dreapta;
 
     public static final String encStName = "colectDr";
     public static final String encSpName = "scissorDr";

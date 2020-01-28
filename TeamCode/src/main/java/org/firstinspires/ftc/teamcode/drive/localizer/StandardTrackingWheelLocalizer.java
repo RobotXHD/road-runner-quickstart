@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.opModes.configs;
@@ -36,7 +37,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 3; // cm
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 40.5; // cm; distance between the left and right wheels 405/2.54
+    public static double LATERAL_DISTANCE = 40.87; // cm; distance between the left and right wheels 405/2.54
     public static double BACKWARDS_OFFSET = 12.5; // cm; offset of the lateral wheel
 
     public ExpansionHubEx expansionHub;
@@ -46,8 +47,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
-                new Pose2d(0, LATERAL_DISTANCE / 2, 180), // left
-                new Pose2d(0, -LATERAL_DISTANCE / 2, 180), // right
+                new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
+                new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
                 new Pose2d(-BACKWARDS_OFFSET, 0, Math.toRadians(90)) // back
         ));
 
@@ -55,6 +56,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         rightEncoder = (ExpansionHubMotor) hardwareMap.dcMotor.get(configs.encDrName);
         backEncoder = (ExpansionHubMotor) hardwareMap.dcMotor.get(configs.encSpName);
         expansionHub = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
+        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        backEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public static double encoderTicksToCms(int ticks) {
