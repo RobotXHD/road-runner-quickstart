@@ -35,7 +35,7 @@ public class  configs {
     public static final String scissorStName = "scissorSt";
     public static final String colectDrName = "colectDr";
     public static final String colectStName = "colectSt";
-    public static final String servoclampName = "clamp";
+    public static final String servoClampName = "clamp";
     public static final String vexDrName = "vexDr";
     public static final String vexStName = "vexSt";
     public static final String servoParcareName = "parcare";
