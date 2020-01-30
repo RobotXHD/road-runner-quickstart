@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -16,6 +17,7 @@ import org.openftc.revextensions2.RevBulkData;
 public class Hardware_Scissor_V1 extends LinearOpMode {
 
     private RevBulkData bulkData;
+    public Servo servoPlatformaSt, servoPlatformaDr;
     private ExpansionHubEx expansionHubSisteme;
     private ExpansionHubMotor scissorDreapta;
     private ExpansionHubMotor scissorStanga;
@@ -39,8 +41,11 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         motorColectDr = hardwareMap.get(DcMotor.class, configs.colectDrName);
         motorColectSt = hardwareMap.get(DcMotor.class, configs.colectStName);
 
+        servoPlatformaDr = hardwareMap.servo.get(configs.servoPlatformaDrName);
+        servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
         vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
         vexSt = hardwareMap.get(ServoImplEx.class, "vexSt");
+
         vexDr.setPwmRange(new PwmControl.PwmRange(1000, 2000));
         vexSt.setPwmRange(new PwmControl.PwmRange(1000, 2000));
         potentiometru = hardwareMap.analogInput.get("pot");
@@ -67,7 +72,29 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         pidScissorDr.setPID(Automatizari_config.kp, Automatizari_config.ki, Automatizari_config.kd);
 
         pidScissorDr.enable();
-        read.start();
+        //read.start();
+    }
+    public void startColect(){
+        motorColectDr.setPower(-1);
+        motorColectSt.setPower(-1);
+    }
+    public void stopColect(){
+        motorColectDr.setPower(0);
+        motorColectSt.setPower(0);
+    }
+    public void startColectReverse(){
+        motorColectDr.setPower(-1);
+        motorColectSt.setPower(-1);
+    }
+
+    public void prindrePlate(){
+        servoPlatformaDr.setPosition(0);
+        servoPlatformaSt.setPosition(1);
+    }
+
+    public void desprindrePlate(){
+        servoPlatformaDr.setPosition(1);
+        servoPlatformaSt.setPosition(0);
     }
 
     public void goScissor(double position){
