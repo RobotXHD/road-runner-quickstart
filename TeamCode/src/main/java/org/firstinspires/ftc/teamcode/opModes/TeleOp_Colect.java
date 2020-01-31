@@ -17,9 +17,7 @@ import static java.lang.Math.abs;
 
 @TeleOp
 public class TeleOp_Colect extends OpMode {
-    /**
-     * declare the motors
-     */
+    /**declare the motors*/
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private ExpansionHubEx expansionHubOdometrie, expansionHubSisteme;
     private DcMotorEx motordf;
@@ -31,9 +29,7 @@ public class TeleOp_Colect extends OpMode {
     private DcMotor motorColectSt, motorColectDr;
     private Servo servoPlatformaSt, servoPlatformaDr, servoCapstone;
     private ServoImplEx vexSt, vexDr, servoClamp;
-    /**
-     * variable for changing the movement speed of the robot
-     */
+    /**variable for changing the movement speed of the robot*/
     private int v = 2;
     /**
      * variables for calculating the power for motors
