@@ -16,11 +16,15 @@ public class ScissorAutoTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            packet.put("Pot", scissor.potentiometru.getVoltage());
-            dashboard.sendTelemetryPacket(packet);
-            packet.clearLines();
-            scissor.motorColectDr.setPower(1);
-            scissor.motorColectSt.setPower(1);
+            scissor.pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);
+            scissor.pidPod.setTolerance(Automatizari_config.tolerancePod);
+            scissor.pidPod.setSetpoint(Automatizari_config.setpointPod);
+            packet.put("PID", scissor.pidPod.performPID(scissor.potentiometruValue));
+            packet.put("P_S", Automatizari_config.kpPod * scissor.pidPod.getError());
+            packet.put("I_S", Automatizari_config.kiPod * scissor.pidPod.getISum());
+            packet.put("D_S", Automatizari_config.kdPod * scissor.pidPod.getDError());
+            packet.put("Setpoint", Automatizari_config.setpointPod);
+            packet.put("Pot. value", scissor.potentiometruValue);
         }
 
         //scissor.goScissor(1000);

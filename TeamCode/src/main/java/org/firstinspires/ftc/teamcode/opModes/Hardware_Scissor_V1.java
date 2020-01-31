@@ -16,17 +16,18 @@ import org.openftc.revextensions2.RevBulkData;
 
 public class Hardware_Scissor_V1 extends LinearOpMode {
 
-    private RevBulkData bulkData;
+    private RevBulkData bulkDataSisteme, bulkDataControl;
     public Servo servoPlatformaSt, servoPlatformaDr;
-    private ExpansionHubEx expansionHubSisteme;
+    private ExpansionHubEx expansionHubSisteme, expansionHubControl;
     private ExpansionHubMotor scissorDreapta;
     private ExpansionHubMotor scissorStanga;
     public DcMotor motorColectSt, motorColectDr;
     private TouchSensor touchScissorDr, touchScissorSt;
     public boolean stop = false;
     public double verifications;
-    private volatile double encoderDreapta;
+    public volatile double encoderDreapta, potentiometruValue;
     private PIDControllerAdevarat pidScissorDr = new PIDControllerAdevarat(0, 0, 0);
+    public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0,0,0);
     public ServoImplEx vexSt, vexDr;
     public AnalogInput potentiometru;
 
@@ -34,6 +35,9 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
 
     public void Init(HardwareMap hardwareMap) {
         expansionHubSisteme = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
+        expansionHubControl = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubOdometrieName);
+
+        potentiometru = hardwareMap.analogInput.get(configs.potentiometruName);
 
         scissorDreapta = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.scissorDrName);
         scissorStanga = (ExpansionHubMotor) hardwareMap.get(DcMotorEx.class, configs.scissorStName);
@@ -43,12 +47,12 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
 
         servoPlatformaDr = hardwareMap.servo.get(configs.servoPlatformaDrName);
         servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
-        vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
-        vexSt = hardwareMap.get(ServoImplEx.class, "vexSt");
+
+        vexDr = hardwareMap.get(ServoImplEx.class, configs.vexDrName);
+        vexSt = hardwareMap.get(ServoImplEx.class, configs.vexStName);
 
         vexDr.setPwmRange(new PwmControl.PwmRange(1000, 2000));
         vexSt.setPwmRange(new PwmControl.PwmRange(1000, 2000));
-        potentiometru = hardwareMap.analogInput.get("pot");
 
         scissorDreapta.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         scissorStanga.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -66,13 +70,21 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         touchScissorSt = hardwareMap.touchSensor.get(configs.touchScissorStName);
 
         pidScissorDr.setSetpoint(0);
+        pidPod.setSetpoint(Automatizari_config.setpointPod);
 
         pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
+        pidPod.setTolerance(1);
 
         pidScissorDr.setPID(Automatizari_config.kp, Automatizari_config.ki, Automatizari_config.kd);
+        pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);
+
+        pidPod.setOutputRange(-0.5,0.5);
 
         pidScissorDr.enable();
-        //read.start();
+        pidPod.enable();
+
+        readControl.start();
+        readSisteme.start();
     }
     public void startColect(){
         motorColectDr.setPower(-1);
@@ -83,8 +95,8 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         motorColectSt.setPower(0);
     }
     public void startColectReverse(){
-        motorColectDr.setPower(-1);
-        motorColectSt.setPower(-1);
+        motorColectDr.setPower(1);
+        motorColectSt.setPower(1);
     }
 
     public void prindrePlate(){
@@ -132,19 +144,29 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
             }
         }
     });
-    private Thread read = new Thread(new Runnable() {
-        double s,d;
+    private Thread readControl = new Thread(new Runnable() {
+        double pot;
         @Override
         public void run() {
             while(!stop){
-                bulkData = expansionHubSisteme.getBulkInputData();
-                d = bulkData.getMotorCurrentPosition(scissorDreapta);
-
-                encoderDreapta = d;
+                bulkDataControl = expansionHubControl.getBulkInputData();
+                pot = bulkDataControl.getAnalogInputValue(potentiometru);
+                potentiometruValue = pot;
             }
         }
     });
 
+    private Thread readSisteme = new Thread(new Runnable() {
+        int d;
+        @Override
+        public void run() {
+            while (!stop){
+                bulkDataSisteme = expansionHubSisteme.getBulkInputData();
+                d = bulkDataSisteme.getMotorCurrentPosition(motorColectDr);
+                encoderDreapta = d;
+            }
+        }
+    });
 
     public void runOpMode() {
     }
