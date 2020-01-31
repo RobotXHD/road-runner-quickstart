@@ -78,7 +78,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         pidScissorDr.setPID(Automatizari_config.kp, Automatizari_config.ki, Automatizari_config.kd);
         pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);
 
-        pidPod.setOutputRange(-0.5,0.5);
+
 
         pidScissorDr.enable();
         pidPod.enable();
