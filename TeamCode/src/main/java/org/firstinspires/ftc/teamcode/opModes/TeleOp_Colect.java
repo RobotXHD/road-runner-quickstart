@@ -120,6 +120,7 @@ public class TeleOp_Colect extends OpMode {
                     alast3 = abut3;
                 }
 
+
                powerSlider = gamepad2.right_stick_y;
                 if (powerSlider < 0) {
                     vexDr.setPosition(0.5 + powerSlider / 2);
