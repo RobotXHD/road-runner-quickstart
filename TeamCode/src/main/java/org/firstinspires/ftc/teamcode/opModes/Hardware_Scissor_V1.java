@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,11 +28,13 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     public double verifications, verificationPod, podPerfomPid;
     public volatile double encoderDreapta, potentiometruValue;
     private PIDControllerAdevarat pidScissorDr = new PIDControllerAdevarat(0, 0, 0);
-    public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0,0,0);
+    public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0, 0, 0);
     public ServoImplEx vexSt, vexDr, servoClamp;
     public AnalogInput potentiometru;
+    public double calibScissor = 15.719;
 
-    public Hardware_Scissor_V1(){}
+    public Hardware_Scissor_V1() {
+    }
 
     public void Init(HardwareMap hardwareMap) {
         expansionHubSisteme = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
@@ -89,73 +92,85 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         readControl.start();
         readSisteme.start();
     }
-    public void startColect(){
+
+    public void startColect() {
         motorColectDr.setPower(-1);
         motorColectSt.setPower(-1);
     }
-    public void stopColect(){
+
+    public void stopColect() {
         motorColectDr.setPower(0);
         motorColectSt.setPower(0);
     }
-    public void startColectReverse(){
+
+    public void startColectReverse() {
         motorColectDr.setPower(1);
         motorColectSt.setPower(1);
     }
 
-    public void prindrePlate(){
+    public void prindrePlate() {
         servoPlatformaDr.setPosition(0);
         servoPlatformaSt.setPosition(1);
     }
 
-    public void desprindrePlate(){
+    public void desprindrePlate() {
         servoPlatformaDr.setPosition(1);
         servoPlatformaSt.setPosition(0);
     }
-    public  void goPodRulant(double position){
+
+    public void goPodRulant(double position) {
         verificationPod = 0;
 
-        if(position < Automatizari_config.minPodValue)
+        if (position < Automatizari_config.minPodValue)
             position = Automatizari_config.minPodValue;
-        else if(position > Automatizari_config.maxPodValue)
+        else if (position > Automatizari_config.maxPodValue)
             position = Automatizari_config.maxPodValue;
         pidPod.setSetpoint(position);
 
         pidPod.setTolerance(Automatizari_config.tolerancePod);
-        do{
+        do {
             podPerfomPid = pidPod.performPID(potentiometruValue);
-            if(podPerfomPid*podPerfomPid > 0.25) podPerfomPid = Math.signum(podPerfomPid)*0.5;
+            if (podPerfomPid * podPerfomPid > 0.25) podPerfomPid = Math.signum(podPerfomPid) * 0.5;
             vexDr.setPosition(podPerfomPid + 0.5);
-            vexSt.setPosition(-podPerfomPid+ 0.5);
+            vexSt.setPosition(-podPerfomPid + 0.5);
 
             verificationPod = pidPod.onTarget() ? verificationPod + 1 : 0;
-        }while(verificationPod < Automatizari_config.targetVerifications);
+        } while (verificationPod < Automatizari_config.targetVerifications);
     }
-    public void goScissor(double position){
-        verifications = 0;
 
+    public void goScissor(double position) {
+        verifications = 0;
         pidScissorDr.setSetpoint(position);
 
         pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
-        do{
+        do {
             scissorStanga.setPower(pidScissorDr.performPID(encoderDreapta));
             scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
             verifications = pidScissorDr.onTarget() ? verifications + 1 : 0;
-        }while(verifications < Automatizari_config.targetVerifications);
+        } while (verifications < Automatizari_config.targetVerifications);
     }
-    public void goCuburi(double numarCub){
-         double ht,hc =300,hr = 1000;
-         ht= (numarCub-1)*hc+150  ;//+ = hplaca
-        if(ht<hr) {
+
+    public void goCuburi(double h) {
+        double ht, hc = 300, hr = 750;
+        ht = 100;//+ = hplaca
+        if (ht < hr) {
+            servoClamp.setPosition(00.8);
+            sleep(2000);
             goScissor(hr);
-            goPodRulant(Automatizari_config.maxPodValue);
-            goScissor(ht);
+            sleep(1000);
+            goPodRulant(1700);
+            sleep(1000);
+            goScissor(ht + hc);
             servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+            sleep(1000);
             goScissor(hr);
+            sleep(1000);
             goPodRulant(Automatizari_config.minPodValue);
+            sleep(1000);
             goScissor(0);
-            servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         }
-      /*  else {
+        /*
+       else {
            goScissor(ht+hc);
             goPodRulant(Automatizari_config.maxPodValue);
             goScissor(ht);
@@ -207,7 +222,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         public void run() {
             while (!stop){
                 bulkDataSisteme = expansionHubSisteme.getBulkInputData();
-                d = bulkDataSisteme.getMotorCurrentPosition(motorColectDr);
+                d = bulkDataSisteme.getMotorCurrentPosition(scissorStanga);
                 encoderDreapta = d;
             }
         }

@@ -7,6 +7,6 @@ import com.acmerobotics.dashboard.config.Config;
 public class Automatizari_config {
 
     public static double kp = 0.003, ki = 0, kd = 0.0025, setpointScissor = 0, Setpoint = 0;
-    public static double kpPod = 0.004, kiPod = 0, kdPod = 0.008, setpointPod = 1000, maxPodValue = 2600, minPodValue = 300;
-    public static double toleranceScissorSt = 20,toleranceScissorDr = 20, tolerancePod = 30,targetVerifications = 50;
+    public static double kpPod = 0.004, kiPod = 0, kdPod = 0.008, setpointPod = 1000, maxPodValue = 2000, minPodValue = 0;
+    public static double toleranceScissorSt = 100,toleranceScissorDr = 100, tolerancePod = 30,targetVerifications = 50;
 }

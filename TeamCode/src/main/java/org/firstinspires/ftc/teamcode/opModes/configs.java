@@ -13,7 +13,7 @@ public class  configs {
     public static final double pozitie_servoRot_maxim= 0.8;
     public static final double pozitie_servorSj_maxim = 0.71;
     public static final double pozitie_servoMonster_maxim = 0.86;
-    public static final double pozitie_servoClamp_prindere = 0.76;
+    public static final double pozitie_servoClamp_prindere = 0.85;
     public static final double pozitie_servoPlatformaDr_maxim = 1;
     public static final double pozitie_servoPlatformaSt_maxim = 0.61;
 

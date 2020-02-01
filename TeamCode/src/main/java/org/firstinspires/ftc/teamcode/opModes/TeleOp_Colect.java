@@ -48,9 +48,9 @@ public class TeleOp_Colect extends OpMode {
     private double forward, right, clockwise, powerLimit = 1, leftStickY, servoParcarePosition = 0.4;
     private boolean stop;
     private boolean apoz = false, alast = true, apoz2 = false, alast2 = true, apoz3 = false, alast3 = true, eStrans = false;
-    private double powerColect = 1, powerSlider;
+    private double powerColect = 1, powerSlider, scissorStangaOffset=0;
     private TouchSensor  touchScissorDr, touchScissorSt, touchGheara;
-    private volatile double expansionHubOdometrieCurrent, expansionHubSistemeCurrent;;
+    private volatile double expansionHubOdometrieCurrent, expansionHubSistemeCurrent;
 
     private Thread Colect = new Thread(new Runnable() {
         @Override
@@ -59,8 +59,13 @@ public class TeleOp_Colect extends OpMode {
             while (!stop) {
 
                 leftStickY = -gamepad2.left_stick_y;
+                if(touchScissorDr.isPressed() || touchScissorSt.isPressed()){
+                    scissorStangaOffset = scissorStanga.getCurrentPosition();
+                }
+
                 scissorStanga.setPower(leftStickY);
                 scissorDreapta.setPower(leftStickY);
+
 
                 /**set the collector motors on or off using the toggle*/
                 boolean abut = gamepad2.b;
@@ -70,7 +75,7 @@ public class TeleOp_Colect extends OpMode {
                         if (apoz && !touchGheara.isPressed()) {
                             motorColectSt.setPower(-powerColect);
                             motorColectDr.setPower(powerColect);
-                            servoClamp.setPosition(0.7);
+                            servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
                             apoz3 = false;
                         } else {
                             motorColectSt.setPower(0);
@@ -96,21 +101,20 @@ public class TeleOp_Colect extends OpMode {
                     alast2 = abut2;
                 }
                 if(touchGheara.isPressed() && motorColectDr.getPower() != 0){
-                    servoClamp.setPosition(0);
+                    servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
                     motorColectSt.setPower(0);
                     motorColectDr.setPower(0);
                     apoz3 = true;
                 }
-
 
                 boolean abut3 = gamepad2.y;
                 if (alast3 != abut3) {
                     if (gamepad2.y) {
                         apoz3 = !apoz3;
                         if (apoz3) {
-                            servoClamp.setPosition(0);
+                            servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
                         } else {
-                            servoClamp.setPosition(0.7);
+                            servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
                         }
                     }
                     alast3 = abut3;
@@ -272,8 +276,8 @@ public class TeleOp_Colect extends OpMode {
         /**set the mode of the motors*/
         scissorStanga.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         scissorStanga.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        scissorDreapta.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        scissorStanga.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        scissorDreapta.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        scissorStanga.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motordf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motords.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorsf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -303,8 +307,7 @@ public class TeleOp_Colect extends OpMode {
         telemetry.addData("TouchscDr", touchScissorDr.isPressed());
         telemetry.addData("TouchscSt", touchScissorSt.isPressed());
         telemetry.addData("TouchGh", touchGheara.isPressed());
-        telemetry.addData("scDr",scissorDreapta.getCurrentPosition());
-        telemetry.addData("scSt",scissorStanga.getCurrentPosition());
+        telemetry.addData("scSt",scissorStanga.getCurrentPosition() - scissorStangaOffset);
         telemetry.addData("power df: ",motordf.getPower() );
         telemetry.update();
     }
