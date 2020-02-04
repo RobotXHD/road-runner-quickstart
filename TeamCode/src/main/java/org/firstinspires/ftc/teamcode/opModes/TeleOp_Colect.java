@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -51,6 +52,7 @@ public class TeleOp_Colect extends OpMode {
     private double powerColect = 1, powerSlider, scissorStangaOffset=0;
     private TouchSensor  touchScissorDr, touchScissorSt, touchGheara;
     private volatile double expansionHubOdometrieCurrent, expansionHubSistemeCurrent;
+    private AnalogInput pot;
 
     private Thread Colect = new Thread(new Runnable() {
         @Override
@@ -256,6 +258,7 @@ public class TeleOp_Colect extends OpMode {
         servoPlatformaDr = hardwareMap.servo.get(configs.servoPlatformaDrName);
         servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
         servoCapstone = hardwareMap.servo.get(configs.servoCapstoneName);
+        pot = hardwareMap.analogInput.get(configs.potentiometruName);
        // servoParcare = hardwareMap.servo.get("parcare");
 
         vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
@@ -309,7 +312,8 @@ public class TeleOp_Colect extends OpMode {
         telemetry.addData("TouchscSt", touchScissorSt.isPressed());
         telemetry.addData("TouchGh", touchGheara.isPressed());
         telemetry.addData("scSt",scissorStanga.getCurrentPosition() - scissorStangaOffset);
-        telemetry.addData("power df: ",motordf.getPower() );
+        telemetry.addData("power df: ",motordf.getPower());
+        telemetry.addData("potentiometru", pot.getVoltage());
         telemetry.update();
     }
 

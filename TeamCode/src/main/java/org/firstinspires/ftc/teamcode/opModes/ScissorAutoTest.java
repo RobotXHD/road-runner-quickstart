@@ -9,14 +9,32 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class ScissorAutoTest extends LinearOpMode {
     Hardware_Scissor_V1 scissor = new Hardware_Scissor_V1();
     FtcDashboard dashboard = FtcDashboard.getInstance();
-    double podPerfomPid;
     TelemetryPacket packet = new TelemetryPacket();
     @Override
     public void runOpMode() {
         scissor.Init(hardwareMap);
-        waitForStart();
-        scissor.goCuburi(0);
 
+        waitForStart();
+
+        while(opModeIsActive()){
+            scissor.pidScissorDr.setSetpoint(Automatizari_config.setpointScissor);
+
+            scissor.pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
+
+            scissor.pidScissorDr.setPID(Automatizari_config.kp, Automatizari_config.ki, Automatizari_config.kd);
+
+            packet.put("Enc", scissor.encoderDreapta);
+            packet.put("Setpoint", scissor.pidScissorDr.getSetpoint());
+            packet.put("P", scissor.pidScissorDr.getP() * scissor.pidScissorDr.getError());
+            packet.put("I", scissor.pidScissorDr.getI() * scissor.pidScissorDr.getISum());
+            packet.put("D", Automatizari_config.kd * (scissor.encoderDreapta - scissor.pidScissorDr.getSetpoint()) - scissor.pidScissorDr.getDError());
+            packet.put("PID", scissor.pidScissorDr.performPID());
+            dashboard.sendTelemetryPacket(packet);
+            packet.clearLines();
+
+            scissor.scissorDreapta.setPower(scissor.pidScissorDr.performPID(scissor.encoderDreapta));
+            scissor.scissorStanga.setPower(scissor.pidScissorDr.performPID());
+        }
 
        /* while (opModeIsActive()){
             scissor.pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);

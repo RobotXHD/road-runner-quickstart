@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-import com.acmerobotics.dashboard.config.Config;
-
-import org.opencv.core.Mat;
-
 // PID controller courtesy of Peter Tischler, with modifications.
-public class PIDControllerAdevarat
+public class PIDControllerAdevaratV2
 {
     private double m_P;                     // factor for "proportional" control
     private double m_I;                     // factor for "integral" control
@@ -26,11 +22,11 @@ public class PIDControllerAdevarat
     private double m_result = 0.0;
 
 
-    public double getDError(){ return m_prevPrevError - m_error; }
+    public double getDError(){ return m_prevPrevError; }
     public double getISum(){
         return m_totalError;
     }
-    public PIDControllerAdevarat(double Kp, double Ki, double Kd)
+    public PIDControllerAdevaratV2(double Kp, double Ki, double Kd)
     {
         m_P = Kp;
         m_I = Ki;

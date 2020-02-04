@@ -20,14 +20,14 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     private RevBulkData bulkDataSisteme, bulkDataControl;
     public Servo servoPlatformaSt, servoPlatformaDr, servoCapstone;
     private ExpansionHubEx expansionHubSisteme, expansionHubControl;
-    private ExpansionHubMotor scissorDreapta;
-    private ExpansionHubMotor scissorStanga;
+    public ExpansionHubMotor scissorDreapta;
+    public ExpansionHubMotor scissorStanga;
     public DcMotor motorColectSt, motorColectDr;
     private TouchSensor touchScissorDr, touchScissorSt;
     public boolean stop = false;
     public double verifications, verificationPod, podPerfomPid;
     public volatile double encoderDreapta, potentiometruValue;
-    private PIDControllerAdevarat pidScissorDr = new PIDControllerAdevarat(0, 0, 0);
+    public PIDControllerAdevaratV2 pidScissorDr = new PIDControllerAdevaratV2(0, 0, 0);
     public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0, 0, 0);
     public ServoImplEx vexSt, vexDr, servoClamp;
     public AnalogInput potentiometru;
@@ -138,6 +138,42 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         } while (verificationPod < Automatizari_config.targetVerifications);
     }
 
+    public void goPodRulant(double position, double triggerTick, double servoPosition) {
+        verificationPod = 0;
+        boolean isReversed = false;
+
+        if (position < Automatizari_config.minPodValue)
+            position = Automatizari_config.minPodValue;
+        else if (position > Automatizari_config.maxPodValue)
+            position = Automatizari_config.maxPodValue;
+        pidPod.setSetpoint(position);
+
+        if(triggerTick < potentiometruValue){
+            isReversed = true;
+        }
+
+        pidPod.setTolerance(Automatizari_config.tolerancePod);
+        do {
+            podPerfomPid = pidPod.performPID(potentiometruValue);
+            if (podPerfomPid * podPerfomPid > 0.25) podPerfomPid = Math.signum(podPerfomPid) * 0.5;
+            vexDr.setPosition(podPerfomPid + 0.5);
+            vexSt.setPosition(-podPerfomPid + 0.5);
+
+            if (isReversed) {
+                if(potentiometruValue < triggerTick){
+                    servoClamp.setPosition(servoPosition);
+                }
+            }
+            else{
+                if(potentiometruValue > triggerTick){
+                    servoClamp.setPosition(servoPosition);
+                }
+            }
+
+            verificationPod = pidPod.onTarget() ? verificationPod + 1 : 0;
+        } while (verificationPod < Automatizari_config.targetVerifications);
+    }
+
     public void goScissor(double position) {
         verifications = 0;
         pidScissorDr.setSetpoint(position);
@@ -148,6 +184,34 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
             scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
             verifications = pidScissorDr.onTarget() ? verifications + 1 : 0;
         } while (verifications < Automatizari_config.targetVerifications);
+    }
+
+    public void goScissor(double position, double triggerTick, double servoPosition){
+        boolean isReversed = false;
+        verifications = 0;
+        pidScissorDr.setSetpoint(position);
+        if(triggerTick < encoderDreapta){
+            isReversed = true;
+        }
+        pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
+        do {
+            scissorStanga.setPower(pidScissorDr.performPID(encoderDreapta));
+            scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
+
+            if(isReversed){
+                if(encoderDreapta < triggerTick){
+                    servoClamp.setPosition(servoPosition);
+                }
+            }
+            else{
+                if(encoderDreapta > triggerTick){
+                    servoClamp.setPosition(servoPosition);
+                }
+            }
+
+            verifications = pidScissorDr.onTarget() ? verifications + 1 : 0;
+        } while (verifications < Automatizari_config.targetVerifications);
+
     }
 
     public void goCuburi(double h) {
@@ -206,9 +270,10 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     });
     private Thread readControl = new Thread(new Runnable() {
         double pot;
+
         @Override
         public void run() {
-            while(!stop){
+            while (!stop) {
                 bulkDataControl = expansionHubControl.getBulkInputData();
                 pot = bulkDataControl.getAnalogInputValue(potentiometru);
                 potentiometruValue = pot;
@@ -218,9 +283,10 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
 
     private Thread readSisteme = new Thread(new Runnable() {
         int d;
+
         @Override
         public void run() {
-            while (!stop){
+            while (!stop) {
                 bulkDataSisteme = expansionHubSisteme.getBulkInputData();
                 d = bulkDataSisteme.getMotorCurrentPosition(scissorStanga);
                 encoderDreapta = d;
