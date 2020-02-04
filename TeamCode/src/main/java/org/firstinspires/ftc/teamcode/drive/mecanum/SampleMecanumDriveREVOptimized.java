@@ -107,7 +107,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     @Override
     public List<Double> getWheelPositions() {
         RevBulkData bulkData = hub.getBulkInputData();
-
         if (bulkData == null) {
             return Arrays.asList(0.0, 0.0, 0.0, 0.0);
         }
