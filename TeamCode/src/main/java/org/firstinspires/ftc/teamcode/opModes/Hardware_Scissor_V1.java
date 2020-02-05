@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -83,20 +85,19 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         pidPod.setSetpoint(Automatizari_config.setpointPod);
 
         pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
-        pidScissorDrAgr.setTolerance(50);
+        pidScissorDrAgr.setTolerance(150);
         pidPod.setTolerance(1);
 
         pidScissorDr.setPID(Automatizari_config.kp, Automatizari_config.ki, Automatizari_config.kd);
         pidScissorDrAgr.setPID(Automatizari_config.kpAgr, Automatizari_config.kiAgr, Automatizari_config.kdAgr);
         pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);
 
-
-        pidScissorDr.enable();
         pidScissorDrAgr.enable();
         pidPod.enable();
 
         readControl.start();
         readSisteme.start();
+        scissorPID.start();
     }
 
     public void startColect() {
@@ -181,60 +182,24 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void goScissorAgr(double position) {
-        verifications = 0;
+        pidScissorDr.disable();
+        pidScissorDrAgr.enable();
         pidScissorDrAgr.setSetpoint(position);
-
-        pidScissorDrAgr.setTolerance(50);
-        do {
-            scissorStanga.setPower(pidScissorDrAgr.performPID(encoderDreapta));
-            scissorDreapta.setPower(pidScissorDrAgr.performPID(encoderDreapta));
-            verifications = pidScissorDrAgr.onTarget() ? verifications + 1 : 0;
-        } while (verifications < Automatizari_config.targetVerifications);
+        while(!pidScissorDrAgr.onTarget()){
+        }
     }
 
     public void goScissor(double position) {
-        verifications = 0;
+        pidScissorDrAgr.disable();
+        pidScissorDr.enable();
         pidScissorDr.setSetpoint(position);
-
-        pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
-        do {
-            scissorStanga.setPower(pidScissorDr.performPID(encoderDreapta));
-            scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
-            verifications = pidScissorDr.onTarget() ? verifications + 1 : 0;
-        } while (verifications < Automatizari_config.targetVerifications);
-    }
-
-    public void goScissor(double position, double triggerTick, double servoPosition){
-        boolean isReversed = false;
-        verifications = 0;
-        pidScissorDr.setSetpoint(position);
-        if(triggerTick < encoderDreapta){
-            isReversed = true;
+        while(!pidScissorDr.onTarget()){
         }
-        pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
-        do {
-            scissorStanga.setPower(pidScissorDr.performPID(encoderDreapta));
-            scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
-
-            if(isReversed){
-                if(encoderDreapta < triggerTick){
-                    servoClamp.setPosition(servoPosition);
-                }
-            }
-            else{
-                if(encoderDreapta > triggerTick){
-                    servoClamp.setPosition(servoPosition);
-                }
-            }
-
-            verifications = pidScissorDr.onTarget() ? verifications + 1 : 0;
-        } while (verifications < Automatizari_config.targetVerifications);
-
     }
 
     public void goCuburi(int cub) {
         //TODO: To stop scissor from crashing hard
-        final int ROBOT_SAFE_DISTANCE = 500;
+        final int ROBOT_SAFE_DISTANCE = 700;
         final int BRIDGE_EXTENDED_POSITION = 1700;
         final int BRIDGE_HOME_POSITION = (int) Automatizari_config.minPodValue;
         final int CUBE_INCREMENT = 180;
@@ -242,47 +207,35 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         if (cub <= 2) {
             goScissorAgr(ROBOT_SAFE_DISTANCE);
             goPodRulant(BRIDGE_EXTENDED_POSITION);
-            servoCapstone.setPosition(configs.pozitie_servoClamp_desprindere);
+            servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
             goScissor(CUBE_POSITIONS[cub]);
             goScissorAgr(ROBOT_SAFE_DISTANCE);
             goPodRulant(BRIDGE_HOME_POSITION);
             goScissor(0);
         } else {
-            if (cub > 5) {
-                CUBE_POSITIONS[6] = CUBE_POSITIONS[5] + (cub - 5) * CUBE_INCREMENT;
+            if (cub > 4) {
+                CUBE_POSITIONS[5] = CUBE_POSITIONS[4] + (cub - 5) * CUBE_INCREMENT;
+                goScissorAgr(CUBE_POSITIONS[5] + CUBE_INCREMENT);
+                goPodRulant(BRIDGE_EXTENDED_POSITION);
+                servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+                goScissor(CUBE_POSITIONS[5]);
+                goScissorAgr(CUBE_POSITIONS[5] + CUBE_INCREMENT + 300);
+                goPodRulant(BRIDGE_HOME_POSITION);
+                goScissor(0);
             }
-            goScissorAgr(CUBE_POSITIONS[6] + CUBE_INCREMENT);
-            goPodRulant(BRIDGE_EXTENDED_POSITION);
-            servoCapstone.setPosition(configs.pozitie_servoClamp_desprindere);
-            goScissor(CUBE_POSITIONS[6]);
-            goScissorAgr(CUBE_POSITIONS[6] + CUBE_INCREMENT);
-            goPodRulant(BRIDGE_HOME_POSITION);
-            goScissor(0);
+            else {
+                goScissorAgr(CUBE_POSITIONS[cub] + CUBE_INCREMENT + 300);
+                sleep(1000);
+                goPodRulant(BRIDGE_EXTENDED_POSITION);
+                servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+                goScissor(CUBE_POSITIONS[cub]);
+                goScissorAgr(CUBE_POSITIONS[cub] + CUBE_INCREMENT + 300);
+                goPodRulant(BRIDGE_HOME_POSITION);
+                goScissor(0);
+            }
         }
     }
 
-
-    private Thread Scissor = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while (!stop) {
-
-                pidScissorDr.setSetpoint(Automatizari_config.setpointScissor);
-
-                scissorDreapta.setPower(pidScissorDr.performPID(encoderDreapta));
-
-                if (touchScissorDr.isPressed()) {
-                    scissorDreapta.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    scissorDreapta.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    pidScissorDr.setSetpoint(0);
-                }
-                if (touchScissorSt.isPressed()) {
-                    scissorStanga.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    scissorStanga.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                }
-            }
-        }
-    });
     private Thread readControl = new Thread(new Runnable() {
         double pot;
 
@@ -305,6 +258,15 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
                 bulkDataSisteme = expansionHubSisteme.getBulkInputData();
                 d = bulkDataSisteme.getMotorCurrentPosition(scissorStanga);
                 encoderDreapta = d;
+            }
+        }
+    });
+    private Thread scissorPID = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (!stop){
+                scissorStanga.setPower(pidScissorDr.enabled()? pidScissorDr.performPID(encoderDreapta) : pidScissorDrAgr.performPID(encoderDreapta));
+                scissorDreapta.setPower(pidScissorDr.enabled()? pidScissorDr.performPID(encoderDreapta) : pidScissorDrAgr.performPID(encoderDreapta));
             }
         }
     });

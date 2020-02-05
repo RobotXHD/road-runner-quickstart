@@ -13,10 +13,23 @@ public class ScissorAutoTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         scissor.Init(hardwareMap);
-
+        scissor.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         waitForStart();
+        scissor.goCuburi(1);
+        sleep(5000);
+        scissor.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+        sleep(1000);
+        scissor.goCuburi(2);
+        sleep(5000);
+        scissor.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+        sleep(1000);
+        scissor.goCuburi(3);
+        scissor.stop = true;
 
-        while(opModeIsActive()){
+        /*sleep(2000);
+        scissor.stop = true;*/
+        //scissor.goCuburi(3);
+        /*while(opModeIsActive()){
             scissor.pidScissorDr.setSetpoint(Automatizari_config.setpointScissor);
 
             scissor.pidScissorDr.setTolerance(Automatizari_config.toleranceScissorDr);
@@ -34,7 +47,7 @@ public class ScissorAutoTest extends LinearOpMode {
 
             scissor.scissorDreapta.setPower(scissor.pidScissorDr.performPID(scissor.encoderDreapta));
             scissor.scissorStanga.setPower(scissor.pidScissorDr.performPID());
-        }
+        }*/
 
        /* while (opModeIsActive()){
             scissor.pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);

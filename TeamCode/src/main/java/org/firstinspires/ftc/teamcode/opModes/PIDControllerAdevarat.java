@@ -45,12 +45,11 @@ public class PIDControllerAdevarat
     private void calculate()
     {
         int sign = 1;
-
         // If enabled then proceed into controller calculations
         if (m_enabled)
         {
-            // Calculate the error signal
             m_error = m_setpoint - m_input;
+            // Calculate the error signal
 
             // If continuous is set to true allow wrap around
             if (m_continuous)
@@ -254,6 +253,7 @@ public class PIDControllerAdevarat
      */
     public boolean onTarget()
     {
+        m_error = m_setpoint - m_input;
         return (Math.abs(m_error) < Math.abs(m_tolerance));
     }
 
@@ -272,6 +272,8 @@ public class PIDControllerAdevarat
     {
         m_enabled = false;
     }
+
+    public boolean enabled() {return m_enabled;}
 
     /**
      * Reset the previous error,, the integral term, and disable the controller.
