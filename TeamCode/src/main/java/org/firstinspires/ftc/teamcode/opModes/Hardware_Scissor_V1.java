@@ -28,14 +28,19 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     public DcMotor motorColectSt, motorColectDr;
     private TouchSensor touchScissorDr, touchScissorSt;
     public boolean stop = false;
-    public double verifications, verificationPod, podPerfomPid;
-    public volatile double encoderDreapta, potentiometruValue;
+    public double verifications, verificationPod, podPerfomPid, powerSc = 0;
+    public volatile double encoderDreapta, vitezaDreapta, potentiometruValue;
     public PIDControllerAdevarat pidScissorDr = new PIDControllerAdevarat(0, 0, 0);
     public PIDControllerAdevarat pidScissorDrAgr = new PIDControllerAdevarat(0, 0, 0);
     public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0, 0, 0);
     public ServoImplEx vexSt, vexDr, servoClamp;
     public AnalogInput potentiometru;
     public double calibScissor = 15.719;
+    public int lastPos;
+
+
+    private FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket packet = new TelemetryPacket();
 
     public Hardware_Scissor_V1() {
     }
@@ -155,7 +160,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
             position = Automatizari_config.maxPodValue;
         pidPod.setSetpoint(position);
 
-        if(triggerTick < potentiometruValue){
+        if (triggerTick < potentiometruValue) {
             isReversed = true;
         }
 
@@ -167,12 +172,11 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
             vexSt.setPosition(-podPerfomPid + 0.5);
 
             if (isReversed) {
-                if(potentiometruValue < triggerTick){
+                if (potentiometruValue < triggerTick) {
                     servoClamp.setPosition(servoPosition);
                 }
-            }
-            else{
-                if(potentiometruValue > triggerTick){
+            } else {
+                if (potentiometruValue > triggerTick) {
                     servoClamp.setPosition(servoPosition);
                 }
             }
@@ -182,34 +186,48 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void goScissorAgr(double position) {
+        lastPos = (int) encoderDreapta;
         pidScissorDr.disable();
         pidScissorDrAgr.enable();
         pidScissorDrAgr.setSetpoint(position);
-        while(!pidScissorDrAgr.onTarget()){
+        pidScissorDrAgr.performPID(encoderDreapta);
+        while (!pidScissorDrAgr.onTarget()) {
         }
     }
 
     public void goScissor(double position) {
+        lastPos = (int) encoderDreapta;
         pidScissorDrAgr.disable();
         pidScissorDr.enable();
         pidScissorDr.setSetpoint(position);
-        while(!pidScissorDr.onTarget()){
+        pidScissorDr.performPID(encoderDreapta);
+        if(pidScissorDr.getSetpoint() == 0){
+            powerSc = -0.7;
+        }
+        else{
+            powerSc = 0;
+        }
+
+        while (!pidScissorDr.onTarget()) {
+        }
+        if(pidScissorDr.getSetpoint() == 0){
+            pidScissorDr.disable();
         }
     }
 
     public void goCuburi(int cub) {
         //TODO: To stop scissor from crashing hard
         final int ROBOT_SAFE_DISTANCE = 700;
-        final int BRIDGE_EXTENDED_POSITION = 1700;
+        final int BRIDGE_EXTENDED_POSITION = 2200;
         final int BRIDGE_HOME_POSITION = (int) Automatizari_config.minPodValue;
         final int CUBE_INCREMENT = 180;
         final int[] CUBE_POSITIONS = {0, 220, 420, 550, 720, 0};
         if (cub <= 2) {
-            goScissorAgr(ROBOT_SAFE_DISTANCE);
+            goScissorAgr(ROBOT_SAFE_DISTANCE + (cub - 1) * 100);
             goPodRulant(BRIDGE_EXTENDED_POSITION);
             servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
             goScissor(CUBE_POSITIONS[cub]);
-            goScissorAgr(ROBOT_SAFE_DISTANCE);
+            goScissorAgr(ROBOT_SAFE_DISTANCE + (cub - 1) * 100);
             goPodRulant(BRIDGE_HOME_POSITION);
             goScissor(0);
         } else {
@@ -222,8 +240,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
                 goScissorAgr(CUBE_POSITIONS[5] + CUBE_INCREMENT + 300);
                 goPodRulant(BRIDGE_HOME_POSITION);
                 goScissor(0);
-            }
-            else {
+            } else {
                 goScissorAgr(CUBE_POSITIONS[cub] + CUBE_INCREMENT + 300);
                 sleep(1000);
                 goPodRulant(BRIDGE_EXTENDED_POSITION);
@@ -234,6 +251,13 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
                 goScissor(0);
             }
         }
+    }
+
+    public void aruncaCuburi(){
+        goScissorAgr(700);
+        goPodRulant(2200, 1500, configs.pozitie_servoClamp_desprindere);
+        goPodRulant(Automatizari_config.minPodValue);
+        goScissor(0);
     }
 
     private Thread readControl = new Thread(new Runnable() {
@@ -250,23 +274,58 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     });
 
     private Thread readSisteme = new Thread(new Runnable() {
-        int d;
+        int d, s, scissorStangaOffset;
 
         @Override
         public void run() {
             while (!stop) {
+                if (touchScissorDr.isPressed() || touchScissorSt.isPressed()) {
+                    scissorStangaOffset = scissorStanga.getCurrentPosition();
+                }
                 bulkDataSisteme = expansionHubSisteme.getBulkInputData();
                 d = bulkDataSisteme.getMotorCurrentPosition(scissorStanga);
-                encoderDreapta = d;
+                s = bulkDataSisteme.getMotorVelocity(scissorStanga);
+                encoderDreapta = d - scissorStangaOffset;
+                vitezaDreapta = s;
+
             }
         }
     });
     private Thread scissorPID = new Thread(new Runnable() {
+        double power = 0, encDr, vDr, brakeDist;
+
         @Override
         public void run() {
-            while (!stop){
-                scissorStanga.setPower(pidScissorDr.enabled()? pidScissorDr.performPID(encoderDreapta) : pidScissorDrAgr.performPID(encoderDreapta));
-                scissorDreapta.setPower(pidScissorDr.enabled()? pidScissorDr.performPID(encoderDreapta) : pidScissorDrAgr.performPID(encoderDreapta));
+            while (!stop) {
+                encDr = encoderDreapta;
+                vDr = Math.abs(vitezaDreapta);
+                if (pidScissorDr.enabled()) {
+                    packet.put("vdr", vDr);
+                    packet.clearLines();
+                    if (lastPos - pidScissorDr.getSetpoint() > 0) {
+                        if (brakeDist + pidScissorDr.getSetpoint() > encDr && pidScissorDr.getSetpoint() < encDr) {
+                            pidScissorDr.performPID(encDr);
+                            power = 0;
+                            packet.put("brakeDist", brakeDist);
+                        } else {
+                            brakeDist = 0.08     * vDr;
+                            power = pidScissorDr.performPID(encDr);
+                        }
+                    } else {
+                        power = pidScissorDr.performPID(encDr);
+                    }
+                    dashboard.sendTelemetryPacket(packet);
+                    packet.clearLines();
+                } else if (pidScissorDrAgr.enabled()) {
+                    power = pidScissorDrAgr.performPID(encDr);
+                } else if(!touchScissorSt.isPressed() || !touchScissorDr.isPressed()){
+                    power = powerSc;
+                }
+                else{
+                    powerSc = 0;
+                }
+                scissorStanga.setPower(power);
+                scissorDreapta.setPower(power);
             }
         }
     });

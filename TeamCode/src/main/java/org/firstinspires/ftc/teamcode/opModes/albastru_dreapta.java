@@ -24,7 +24,7 @@ public class albastru_dreapta extends LinearOpMode {
             r.startColect();
             if (isStopRequested()) return;
             // pozitie plecare
-            drive.setPoseEstimate(new Pose2d(-35 * 2.54, 62 * 2.54, Math.toRadians(-90)));
+            drive.setPoseEstimate(new Pose2d(-33.8 * 2.54, 63.14 * 2.54, Math.toRadians(-90)));
             //primul cub
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
@@ -37,7 +37,7 @@ public class albastru_dreapta extends LinearOpMode {
                 drive.trajectoryBuilder()
                         .setReversed(true)
                         .splineTo(new Pose2d(0 * 2.54, 40 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(52 * 2.54, 30 * 2.54, Math.toRadians(-270)))
+                        .splineTo(new Pose2d(41 * 2.54, 30 * 2.54, Math.toRadians(-270)))
                         .build()
             );
             r.startColectReverse();
@@ -78,5 +78,6 @@ public class albastru_dreapta extends LinearOpMode {
 
                         .build()
         );
+        r.stop = true;
     }
 }

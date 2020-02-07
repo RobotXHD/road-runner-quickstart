@@ -218,9 +218,7 @@ public class HardwareSkybot_V2 extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode() {
-
-    }
+    public void runOpMode() {}
 
     private void power(double ds, double df, double ss, double sf) {
         motordf.setPower(df);

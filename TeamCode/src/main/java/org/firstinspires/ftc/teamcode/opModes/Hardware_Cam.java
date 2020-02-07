@@ -24,8 +24,8 @@ public class Hardware_Cam<ArrayList> extends LinearOpMode {
 
     public OpenCvCamera webcam;
     private int resWidth = 640, resHeight = 480;
-    private Point p1 = new Point(150,0);
-    private Point p2 = new Point(resHeight,resWidth-150);
+    private Point p1 = new Point(150,0); //stanga sus
+    private Point p2 = new Point(resHeight,resWidth-150); //dreapta jos
     public StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(p1, p2);
 
     public Hardware_Cam(){}
