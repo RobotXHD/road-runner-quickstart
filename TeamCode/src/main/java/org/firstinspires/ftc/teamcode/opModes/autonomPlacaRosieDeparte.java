@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous
 
 public class autonomPlacaRosieDeparte extends LinearOpMode {
     HardwareSkybot_V2 r = new HardwareSkybot_V2(true);

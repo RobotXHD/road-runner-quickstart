@@ -20,19 +20,19 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.List;
 
 
-public class Hardware_Cam extends LinearOpMode {
+public class Hardware_Cam_Red extends LinearOpMode {
 
     public OpenCvCamera webcam;
     private int resWidth = 640, resHeight = 480;
-    private Point p1 = new Point(0,50);//stanga sus
-    private Point p2 = new Point(resHeight,resWidth-400);//dreapta jos
+    private Point p1 = new Point(50,50);//stanga sus
+    private Point p2 = new Point(resHeight,resWidth-400);;//dreapta jos
     public StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(p1, p2);
 
 
-    public Hardware_Cam(){}
+    public Hardware_Cam_Red(){}
 
     public void Init(HardwareMap hard) {
-        stoneDetectorModified.stonesToFind = 1; 
+        stoneDetectorModified.stonesToFind = 1;
         stoneDetectorModified.useDefaults();
         stoneDetectorModified.filter = new SkystoneDetector(p1, p2);
         stoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
@@ -56,3 +56,4 @@ public class Hardware_Cam extends LinearOpMode {
 
     }
 }
+

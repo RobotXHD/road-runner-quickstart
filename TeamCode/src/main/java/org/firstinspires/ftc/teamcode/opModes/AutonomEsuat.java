@@ -18,7 +18,6 @@ import org.openftc.revextensions2.RevBulkData;
 
 import static java.lang.Math.PI;
 
-@Autonomous
 public class AutonomEsuat extends LinearOpMode {
     private OpenCvCamera webcam;
     private int resWidth = 800, resHeight = 448;

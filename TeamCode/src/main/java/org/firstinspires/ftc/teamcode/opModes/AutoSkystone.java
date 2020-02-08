@@ -1,41 +1,39 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-import com.disnodeteam.dogecv.DogeCV;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.opencv.core.Point;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
+
 
 @Autonomous
-
 public class AutoSkystone extends LinearOpMode {
-    private OpenCvCamera webcam;
-    private int resWidth = 640, resHeight = 480;
-    private Point p1 = new Point(0,0);
-    private Point p2 = new Point(resHeight,resWidth);
-    private StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(p1, p2);
-
+    Hardware_Cam cam = new Hardware_Cam();
+    SampleMecanumDriveBase drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+    Hardware_Scissor_V1 r = new Hardware_Scissor_V1();
+    int caz;
     @Override
     public void runOpMode() {
-        stoneDetectorModified.stonesToFind = 1;
-        stoneDetectorModified.useDefaults();
-        stoneDetectorModified.filter = new SkystoneDetector(p1, p2);
-        stoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
-
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK,cameraMonitorViewId);
-        webcam.openCameraDevice();
-        webcam.setPipeline(stoneDetectorModified);
-        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.UPRIGHT);
+        cam.Init(hardwareMap);
+        r.Init(hardwareMap);
         waitForStart();
-
         while (opModeIsActive()) {
-            telemetry.addData("X sau Y: ", stoneDetectorModified.foundRectangles());
-            telemetry.addData("Ceva: ", stoneDetectorModified.foundScreenPositions());
-            telemetry.addData("Ceva: ", stoneDetectorModified.foundPozitionare());
+            telemetry.addData("Ceva: ", cam.stoneDetectorModified.foundScreenPositions().get(0).y);
+
+            if (cam.stoneDetectorModified.foundScreenPositions().get(0).y >= 140) {
+                telemetry.addData("Position", "CENTRE");
+                caz = 0;
+            } else if (cam.stoneDetectorModified.foundScreenPositions().get(0).y > 70) {
+                telemetry.addData("Position", "RIGHT");
+                caz = 1;
+            } else {
+                telemetry.addData("Position", "LEFT");
+                caz = -1;
+
+            }
             telemetry.update();
         }
     }

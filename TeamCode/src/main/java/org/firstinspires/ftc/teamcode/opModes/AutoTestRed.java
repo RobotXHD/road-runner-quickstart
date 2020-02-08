@@ -45,7 +45,7 @@ public class AutoTestRed extends LinearOpMode {
         }
         waitForStart();
        // cam.stopDetection();
-        if(caz == -1){
+   /*     if(caz == -1){
             r.gotoY(3500,1);
             r.rotatie(45,1);
             r.startColect();
@@ -93,7 +93,7 @@ public class AutoTestRed extends LinearOpMode {
             r.gotoY(-11000,1);
 
              */
-        }
+       /* }
 
 
         else if(caz == 0){
@@ -143,7 +143,7 @@ public class AutoTestRed extends LinearOpMode {
             r.startColectReverse();
             r.gotoY(-10000,1);
              */
-        }
+       /* }
 
 
         else{ //caz == "1"
@@ -184,6 +184,6 @@ public class AutoTestRed extends LinearOpMode {
             r.startColectReverse();
             r.gotoY(-10000,1);
             // r.rotatie(-180,1);
-        }
+        }*/
     }
 }

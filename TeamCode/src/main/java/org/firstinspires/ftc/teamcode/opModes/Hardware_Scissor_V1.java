@@ -308,7 +308,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
                             power = 0;
                             packet.put("brakeDist", brakeDist);
                         } else {
-                            brakeDist = 0.08     * vDr;
+                            brakeDist = 0.08 * vDr;
                             power = pidScissorDr.performPID(encDr);
                         }
                     } else {

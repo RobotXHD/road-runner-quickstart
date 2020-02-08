@@ -6,24 +6,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous
 public class AutoTestBlue extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
-    HardwareSkybot_V3 r = new HardwareSkybot_V3(true);
+//    HardwareSkybot_V3 r = new HardwareSkybot_V3(true);
     private int caz;
     private double rotatie;
     @Override
     public void runOpMode() {
         cam.Init(hardwareMap);
-        r.Init(hardwareMap);
+       // r.Init(hardwareMap);
         cam.startDetection();
         sleep(1000);
-        while(cam.webcam.getFps() == 0){
+    /*    while(cam.webcam.getFps() == 0){
             cam.stopDetection();
             cam.startDetection();
             sleep(1000);
-        }
-        while (!isStarted()){
+        }*/
+     /*   while (!isStarted()){
             telemetry.addData("X:", cam.stoneDetectorModified.foundScreenPositions().get(0).x);
             telemetry.addData("Y:", cam.stoneDetectorModified.foundScreenPositions().get(0).y);
-            if(cam.stoneDetectorModified.foundScreenPositions().get(0).y>143){
+           if(cam.stoneDetectorModified.foundScreenPositions().get(0).y>143){
                 telemetry.addData("Position", "LEFT");
                 caz = 1;
             }
@@ -35,7 +35,7 @@ public class AutoTestBlue extends LinearOpMode {
                 telemetry.addData("Position", "RIGHT");
                 caz = -1;
 
-            }
+            }*/
             telemetry.update();
             /*telemetry.addData("DR", r.encDr);
             telemetry.addData("ST", r.encSt);
@@ -44,8 +44,10 @@ public class AutoTestBlue extends LinearOpMode {
            /* telemetry.addData("Ceva: ", cam.stoneDetectorModified.foundScreenPositions());
             telemetry.addData("Ceva v2: ", cam.stoneDetectorModified.foundPozitionare());*/
         }
-        waitForStart();
-        if(caz == -1){
+      //  waitForStart();
+//        cam.stopDetection();
+
+    /*    if(caz == -1){
             r.gotoY(3500,1);
             r.rotatie(-45,1);
             r.startColect();
@@ -93,7 +95,7 @@ public class AutoTestBlue extends LinearOpMode {
             r.gotoY(-11000,1);
 
              */
-        }
+       /* }
 
         else if(caz == 0){
             r.gotoY(8000, 1);
@@ -143,7 +145,7 @@ public class AutoTestBlue extends LinearOpMode {
             r.startColectReverse();
             r.gotoY(-10000,1);
              */
-        }
+      /*  }
 
 
         else{ //caz == "1"
@@ -184,6 +186,6 @@ public class AutoTestBlue extends LinearOpMode {
             r.startColectReverse();
             r.gotoY(-10000,1);
             // r.rotatie(-180,1);
-        }
-    }
+        }-*/
+    //}
 }
