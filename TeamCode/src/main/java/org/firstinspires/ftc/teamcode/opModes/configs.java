@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-public class  configs {
+public class configs {
     //pozitii minime
     public static final double pozitie_servoRot_minim = 0.06;
     public static final double pozitie_servorSj_minim = 0.08;

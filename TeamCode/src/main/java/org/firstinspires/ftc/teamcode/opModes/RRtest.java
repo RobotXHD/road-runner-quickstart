@@ -25,7 +25,7 @@ public class RRtest extends LinearOpMode {
         waitForStart();
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                    .splineTo(new Pose2d(30,0,0))
+                    .splineTo(new Pose2d(100,0,Math.toRadians(90)))
                     .build()
         );
         while (!isStopRequested()){

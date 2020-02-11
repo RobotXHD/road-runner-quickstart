@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
@@ -77,6 +78,9 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
         scissorDreapta.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         scissorStanga.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        motorColectSt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorColectDr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         scissorDreapta.setDirection(DcMotorSimple.Direction.REVERSE);
         scissorStanga.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -106,7 +110,7 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void startColect() {
-        motorColectDr.setPower(-1);
+        motorColectDr.setPower(1);
         motorColectSt.setPower(-1);
     }
 
@@ -116,8 +120,12 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void startColectReverse() {
-        motorColectDr.setPower(1);
+        motorColectDr.setPower(-1);
         motorColectSt.setPower(1);
+    }
+    public void Colect(double power){
+        motorColectDr.setPower(-power);
+        motorColectSt.setPower(power);
     }
 
     public void prindrePlate() {

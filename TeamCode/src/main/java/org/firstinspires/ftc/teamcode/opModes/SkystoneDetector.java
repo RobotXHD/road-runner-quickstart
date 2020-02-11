@@ -45,7 +45,7 @@ public class SkystoneDetector extends DogeCVColorFilter {
         Imgproc.dilate(lab, lab, kernel, new Point(-1,-1),8);
 
         Core.bitwise_and(lab, grayscale, mask);
-        Imgproc.dilate(mask, mask, kernel, new Point(-1, -1), 9);
+        Imgproc.dilate(mask, mask, kernel, new Point(-1, -1), 13);
         Core.bitwise_and(mask, maskTemp, mask);
 
         grayscale.release();

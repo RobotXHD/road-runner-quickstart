@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.filters.GrayscaleFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
@@ -24,9 +26,12 @@ public class Hardware_Cam extends LinearOpMode {
 
     public OpenCvCamera webcam;
     private int resWidth = 640, resHeight = 480;
-    private Point p1 = new Point(0,50);//stanga sus
+    private Point p1 = new Point(0,0);//stanga sus
     private Point p2 = new Point(resHeight,resWidth-400);//dreapta jos
     public StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(p1, p2);
+    public boolean isInitFinished = false;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    TelemetryPacket packet = new TelemetryPacket();
 
 
     public Hardware_Cam(){}
@@ -40,10 +45,12 @@ public class Hardware_Cam extends LinearOpMode {
         int cameraMonitorViewId = hard.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hard.appContext.getPackageName());
         webcam = new OpenCvWebcam(hard.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         webcam.openCameraDevice();
+        packet.put("Even though I should be ", "here");
+        dashboard.sendTelemetryPacket(packet);
         webcam.setPipeline(stoneDetectorModified);
-        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-
-
+        sleep(2000);
+        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.SIDEWAYS_LEFT);
+        isInitFinished = true;
     }
     public void startDetection(){
         webcam.startStreaming(resWidth, resHeight);
