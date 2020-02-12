@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.opencv.core.Mat;
 
+import java.util.Vector;
+
 
 @Autonomous
 public class AutoTestAlbastre extends LinearOpMode {
@@ -76,20 +78,52 @@ public class AutoTestAlbastre extends LinearOpMode {
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(true)
-                        .splineTo(new Pose2d(10 * 2.54, 38 * 2.54, Math.toRadians(-180)))
-                        .lineTo(new Vector2d(39 * 2.54,33 * 2.54), new LinearInterpolator(Math.toRadians(90), Math.toRadians(0)))
+                        .splineTo(new Pose2d(10 * 2.54,38 * 2.54, Math.toRadians(-180)))
+                        .lineTo(new Vector2d(61 * 2.54,38 * 2.54), new LinearInterpolator(Math.toRadians(90), Math.toRadians(0)))
+                        .lineTo(new Vector2d(61 * 2.54,31 * 2.54))
                         .build()
         );
         r.prindrePlate();
+        r.startColectReverse();
         sleep(3000);
 
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(false)
-                        .lineTo(new Vector2d(30 * 2.54,39 * 2.54), new LinearInterpolator(Math.toRadians(90), Math.toRadians(0)))
+                        .splineTo(new Pose2d(20 * 2.54,60 * 2.54, Math.toRadians(-180)))
                         .build()
         );
         r.stopColect();
+        r.desprindrePlate();
+        sleep(1000);
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .strafeTo(new Vector2d(20 * 2.54, 38 * 2.54))
+                        .build()
+        );
+
+        r.startColect();
+        if(caz == 1){
+
+        }
+        else if(caz == 0){
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .setReversed(false)
+                            .splineTo(new Pose2d(-28 * 2.54, 34 * 2.54, Math.toRadians(-135)))
+                            .build()
+            );
+        }
+        else{
+
+        }
+
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .setReversed(true)
+                        .splineTo(new Pose2d(20 * 2.54, 38 * 2.54, Math.toRadians(-180)))
+                        .build()
+        );
 
         /*
         drive.followTrajectorySync(
