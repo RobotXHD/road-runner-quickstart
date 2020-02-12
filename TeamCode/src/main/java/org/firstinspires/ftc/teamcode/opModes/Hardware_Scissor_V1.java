@@ -110,8 +110,8 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void startColect() {
-        motorColectDr.setPower(1);
-        motorColectSt.setPower(-1);
+        motorColectDr.setPower(-0.5);
+        motorColectSt.setPower(-0.5);
     }
 
     public void stopColect() {
@@ -120,11 +120,11 @@ public class Hardware_Scissor_V1 extends LinearOpMode {
     }
 
     public void startColectReverse() {
-        motorColectDr.setPower(-1);
+        motorColectDr.setPower(1);
         motorColectSt.setPower(1);
     }
     public void Colect(double power){
-        motorColectDr.setPower(-power);
+        motorColectDr.setPower(power);
         motorColectSt.setPower(power);
     }
 

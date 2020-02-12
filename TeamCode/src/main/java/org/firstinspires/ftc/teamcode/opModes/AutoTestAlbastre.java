@@ -2,11 +2,17 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
+import org.opencv.core.Mat;
 
 
 @Autonomous
@@ -44,7 +50,7 @@ public class AutoTestAlbastre extends LinearOpMode {
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
                             .setReversed(false)
-                            .splineTo(new Pose2d(-62 * 2.54, 24*2.54, Math.toRadians(-135)))
+                            .splineTo(new Pose2d(-57 * 2.54, 31*2.54, Math.toRadians(-135)))
                             .build()
             );
         }
@@ -52,7 +58,7 @@ public class AutoTestAlbastre extends LinearOpMode {
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
                             .setReversed(false)
-                            .splineTo(new Pose2d(-56 * 2.54, 24*2.54, Math.toRadians(-135)))
+                            .splineTo(new Pose2d(-49 * 2.54, 31*2.54, Math.toRadians(-135)))
                             .build()
             );
         }
@@ -60,24 +66,45 @@ public class AutoTestAlbastre extends LinearOpMode {
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
                             .setReversed(false)
-                            .splineTo(new Pose2d(-38.91 * 2.54, 31*2.54, Math.toRadians(-135)))
-                            .splineTo(new Pose2d(-48*2.54, 23*2.54, Math.toRadians(-135)))
+                            .splineTo(new Pose2d(-35 * 2.54, 36*2.54, Math.toRadians(-135)))
+                            .splineTo(new Pose2d(-41*2.54, 31*2.54, Math.toRadians(-135)))
                             .build()
             );
 
         }
-/*
+
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .setReversed(true)
+                        .splineTo(new Pose2d(10 * 2.54, 38 * 2.54, Math.toRadians(-180)))
+                        .lineTo(new Vector2d(39 * 2.54,33 * 2.54), new LinearInterpolator(Math.toRadians(90), Math.toRadians(0)))
+                        .build()
+        );
+        r.prindrePlate();
+        sleep(3000);
+
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .setReversed(false)
+                        .lineTo(new Vector2d(30 * 2.54,39 * 2.54), new LinearInterpolator(Math.toRadians(90), Math.toRadians(0)))
+                        .build()
+        );
+        r.stopColect();
+
+        /*
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(true)
                         .splineTo(new Pose2d(0 * 2.54, 40 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(41 * 2.54, 28   * 2.54, Math.toRadians(-270)))
+                        .splineTo(new Pose2d(41 * 2.54, 38   * 2.54, Math.toRadians(-270)))
                         .build()
         );
         r.startColectReverse();
-        r.prindrePlate();
+
+
 
         sleep(3000);
+        /*
         // tras placa in centru
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()

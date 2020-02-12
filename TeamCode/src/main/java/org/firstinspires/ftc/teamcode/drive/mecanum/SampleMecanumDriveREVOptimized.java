@@ -75,13 +75,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        /*
-        List<Pose2d> pose2ds = new ArrayList<>();
-        pose2ds.add(new Pose2d(0,7.9921259842519685039370078740157,0));
-        pose2ds.add(new Pose2d(0,-7.9921259842519685039370078740157,0));
-        pose2ds.add(new Pose2d(-4.9212598425196850393700787401575,0,Math.PI/2));
-         */
-
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
         // hope it works
