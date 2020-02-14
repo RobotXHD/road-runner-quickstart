@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
 import com.disnodeteam.dogecv.DogeCV;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -23,7 +22,7 @@ public class AutonomEsuat extends LinearOpMode {
     private int resWidth = 800, resHeight = 448;
     private Point p1 = new Point(resHeight * 0.55, 0);
     private Point p2 = new Point(resHeight, resWidth);
-    private StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(p1, p2);
+    private SkystoneDetectorModified skystoneDetectorModified = new SkystoneDetectorModified(p1, p2);
     private RevBulkData bulkData;
     private ExpansionHubMotor encoderDreapta, encoderSpate, encoderStanga;
     private ExpansionHubEx expansionHub;
@@ -193,24 +192,24 @@ public class AutonomEsuat extends LinearOpMode {
         motordf.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        stoneDetectorModified.stonesToFind = 1;
-        stoneDetectorModified.useDefaults();
-        stoneDetectorModified.filter = new SkystoneDetector(p1, p2);
-        stoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
+        skystoneDetectorModified.stonesToFind = 1;
+        skystoneDetectorModified.useDefaults();
+        skystoneDetectorModified.filter = new SkystoneDetector(p1, p2);
+        skystoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         webcam.openCameraDevice();
-        webcam.setPipeline(stoneDetectorModified);
+        webcam.setPipeline(skystoneDetectorModified);
         webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.SIDEWAYS_LEFT);
         Loc.start();
 
         //power(-0.3,-0.3,0.3,0.3); // se roteste cu minus
 
         while (!isStarted()) {
-            if (stoneDetectorModified.foundRectangles().get(0).y > 406) {
+            if (skystoneDetectorModified.foundRectangles().get(0).y > 406) {
                 telemetry.addData("Skystone Position:", "LEFT");
-            } else if (stoneDetectorModified.foundRectangles().get(0).y > 253) {
+            } else if (skystoneDetectorModified.foundRectangles().get(0).y > 253) {
                 telemetry.addData("Skystone Position", "CENTER");
             } else {
                 telemetry.addData("Skystone Position", "RIGHT");

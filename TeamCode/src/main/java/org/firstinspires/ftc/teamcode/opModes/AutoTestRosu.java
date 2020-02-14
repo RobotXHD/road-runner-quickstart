@@ -22,12 +22,12 @@ public class AutoTestRosu extends LinearOpMode {
         r.Init(hardwareMap);
 
         while (!isStarted()) {
-            telemetry.addData("Ceva: ", cam.stoneDetectorModified.foundScreenPositions().get(0).x);
+            telemetry.addData("Ceva: ", cam.skystoneDetectorModified.foundScreenPositions().get(0).x);
 
-            if (cam.stoneDetectorModified.foundScreenPositions().get(0).x >= 156) {
+            if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x >= 156) {
                 telemetry.addData("Position", "Left");
                 caz = -1;
-            } else if (cam.stoneDetectorModified.foundScreenPositions().get(0).x > 38) {
+            } else if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x > 38) {
                telemetry.addData("Position", "Center");
                 caz = 0;
             } else {

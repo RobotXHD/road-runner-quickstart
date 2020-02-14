@@ -21,21 +21,21 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Disabled
 public class AutoLevi extends LinearOpMode {
     OpenCvCamera webcam;
-    StoneDetectorModified stoneDetectorModified = new StoneDetectorModified(new Point(), new Point());
+    SkystoneDetectorModified skystoneDetectorModified = new SkystoneDetectorModified(new Point(), new Point());
     int aMini = 120, aMaxi = 157;
     int bMini = 162, bMaxi = 209;
     double systime;
     @Override
     public void runOpMode()
     {
-        stoneDetectorModified.useDefaults();
-        stoneDetectorModified.filter = new YellowStoneDetector();
-        stoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
+        skystoneDetectorModified.useDefaults();
+        skystoneDetectorModified.filter = new YellowStoneDetector();
+        skystoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         webcam.openCameraDevice();
-        webcam.setPipeline(stoneDetectorModified);
+        webcam.setPipeline(skystoneDetectorModified);
         webcam.startStreaming(640, 480, OpenCvCameraRotation.SIDEWAYS_LEFT);
         waitForStart();
         while (opModeIsActive()) {
@@ -43,56 +43,56 @@ public class AutoLevi extends LinearOpMode {
                aMaxi += 2;
                sleep(200);
                //webcam.stopStreaming();
-               //stoneDetectorModified.filter = new Levii();
+               //skystoneDetectorModified.filter = new Levii();
                //webcam.startStreaming(640, 480);
             }
             if(gamepad1.x){
                 aMaxi -= 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if(gamepad1.b){
                 bMaxi += 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if(gamepad1.y){
                 bMaxi -= 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if(gamepad1.dpad_up){
                 aMini += 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if(gamepad1.dpad_down){
                 aMini -= 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if(gamepad1.dpad_right){
                 bMini += 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
             if( gamepad1.dpad_left){
                 bMini -= 2;
                 sleep(200);
                 //webcam.stopStreaming();
-                //stoneDetectorModified.filter = new Levii();
+                //skystoneDetectorModified.filter = new Levii();
                 //webcam.startStreaming(640, 480);
             }
            /* telemetry.addData("Frame Count", webcam.getFrameCount());
@@ -102,8 +102,8 @@ public class AutoLevi extends LinearOpMode {
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());*/
 
-            telemetry.addData("X sau Y: ", stoneDetectorModified.foundRectangles());
-            telemetry.addData("Ceva: ", stoneDetectorModified.foundScreenPositions());
+            telemetry.addData("X sau Y: ", skystoneDetectorModified.foundRectangles());
+            telemetry.addData("Ceva: ", skystoneDetectorModified.foundScreenPositions());
             telemetry.update();
         }
     }

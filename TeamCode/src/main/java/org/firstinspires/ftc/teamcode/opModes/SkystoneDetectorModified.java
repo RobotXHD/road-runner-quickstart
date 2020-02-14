@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class StoneDetectorModified extends DogeCVDetector {
+public class SkystoneDetectorModified extends DogeCVDetector {
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 
     //Create the default filters and scorers
@@ -55,7 +55,7 @@ public class StoneDetectorModified extends DogeCVDetector {
         return pozitieCub;
     }
 
-    StoneDetectorModified(Point p1, Point p2) {
+    SkystoneDetectorModified(Point p1, Point p2) {
         detectorName = "Stone Detector";
         x = (int) Math.floor(p1.x);
         y = (int) Math.floor(p1.y);
@@ -107,7 +107,7 @@ public class StoneDetectorModified extends DogeCVDetector {
         Imgproc.rectangle(displayMat, rect, new Scalar(0,0,255), 3);
 
 
-        if (foundRects.size() > 0) {
+        if (contoursYellow.size() > 0) {
             found = true;
         }
         else {

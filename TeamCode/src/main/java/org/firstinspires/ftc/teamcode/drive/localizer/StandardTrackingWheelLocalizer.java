@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -44,6 +45,22 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public RevBulkData bulkData;
 
     private ExpansionHubMotor leftEncoder, rightEncoder, backEncoder;
+
+
+    public StandardTrackingWheelLocalizer(HardwareMap hardwareMap, DcMotorEx encLeft, DcMotorEx encRight, DcMotorEx encBack) {
+        super(Arrays.asList(
+                new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
+                new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
+                new Pose2d(-BACKWARDS_OFFSET, 0, Math.toRadians(90)) // back
+        ));
+
+        leftEncoder = (ExpansionHubMotor) encLeft;
+        rightEncoder = (ExpansionHubMotor) encRight;
+        backEncoder = (ExpansionHubMotor) encBack;
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
+        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        backEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(

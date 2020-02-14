@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class AutoTestRed extends LinearOpMode {
@@ -20,13 +19,13 @@ public class AutoTestRed extends LinearOpMode {
             sleep(1000);
         }
         while (!isStarted()){
-            telemetry.addData("X:", cam.stoneDetectorModified.foundScreenPositions().get(0).x);
-            telemetry.addData("Y:", cam.stoneDetectorModified.foundScreenPositions().get(0).y);
-            if(cam.stoneDetectorModified.foundScreenPositions().get(0).y>226){
+            telemetry.addData("X:", cam.skystoneDetectorModified.foundScreenPositions().get(0).x);
+            telemetry.addData("Y:", cam.skystoneDetectorModified.foundScreenPositions().get(0).y);
+            if(cam.skystoneDetectorModified.foundScreenPositions().get(0).y>226){
                 telemetry.addData("Position", "LEFT");
                 caz = -1;
             }
-            else if(cam.stoneDetectorModified.foundScreenPositions().get(0).y>75){
+            else if(cam.skystoneDetectorModified.foundScreenPositions().get(0).y>75){
                 telemetry.addData("Position", "CENTER");
                 caz = 0;
             }
@@ -39,8 +38,8 @@ public class AutoTestRed extends LinearOpMode {
             telemetry.addData("ST", r.encSt);
             telemetry.addData("SP", r.encSp);
             telemetry.update();
-           /* telemetry.addData("Ceva: ", cam.stoneDetectorModified.foundScreenPositions());
-            telemetry.addData("Ceva v2: ", cam.stoneDetectorModified.foundPozitionare());*/
+           /* telemetry.addData("Ceva: ", cam.skystoneDetectorModified.foundScreenPositions());
+            telemetry.addData("Ceva v2: ", cam.skystoneDetectorModified.foundPozitionare());*/
         }
         waitForStart();
        // cam.stopDetection();

@@ -26,7 +26,7 @@ public class StoneDetectorOriginal extends DogeCVDetector {
     //Create the default filters and scorers
     public DogeCVColorFilter filter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW, 70); //Default Yellow blackFilter
 
-    public int stonesToFind = 2;
+    public int stonesToFind = 1;
 
 
     public RatioScorer ratioScorerForShortFace = new RatioScorer(1.25, 3); // Used to find the short face of the stone
