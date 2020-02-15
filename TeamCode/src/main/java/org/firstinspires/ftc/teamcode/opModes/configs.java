@@ -5,7 +5,7 @@ public class configs {
     public static final double pozitie_servoRot_minim = 0.06;
     public static final double pozitie_servorSj_minim = 0.08;
     public static final double pozitie_servoMonster_minim = 0.11;
-    public static final double pozitie_servoClamp_desprindere = 0.3;
+    public static final double pozitie_servoClamp_desprindere = 0.4;
     public static final double pozitie_servoPlatformaDr_minim = 0.33;
     public static final double pozitie_servoPlatformaSt_minim = 0.97;
 

@@ -26,12 +26,16 @@ public class Hardware_Cam extends LinearOpMode {
     TelemetryPacket packet = new TelemetryPacket();
 
 
-    public Hardware_Cam(){}
+    public Hardware_Cam(){
+        skystoneDetectorModified.filter = new SkystoneDetector(p1, p2);
+    }
+    public Hardware_Cam(DogeCVColorFilter filter){
+        skystoneDetectorModified.filter = filter;
+    }
     public void Init(HardwareMap hard) {
 
         skystoneDetectorModified.stonesToFind = 1; 
         skystoneDetectorModified.useDefaults();
-        skystoneDetectorModified.filter = new SkystoneDetector(p1, p2);
         skystoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
 
         int cameraMonitorViewId = hard.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hard.appContext.getPackageName());

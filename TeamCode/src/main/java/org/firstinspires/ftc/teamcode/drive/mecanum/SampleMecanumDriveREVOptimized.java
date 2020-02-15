@@ -162,12 +162,12 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public void prindrePlate() {
         servoPlatformaDr.setPosition(0);
-        servoPlatformaSt.setPosition(1);
+        servoPlatformaSt.setPosition(0.97);
     }
 
     public void desprindrePlate() {
-        servoPlatformaDr.setPosition(0.8);
-        servoPlatformaSt.setPosition(0.2);
+        servoPlatformaDr.setPosition(0.26);
+        servoPlatformaSt.setPosition(0.70);
     }
 
     public void goPodRulant(double position) {
@@ -182,6 +182,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         pidPod.setTolerance(Automatizari_config.tolerancePod);
         do {
+
+            update();
+            updatePoseEstimate();
+
             podPerfomPid = pidPod.performPID(potentiometruValue);
             if (podPerfomPid * podPerfomPid > 0.25) podPerfomPid = Math.signum(podPerfomPid) * 0.5;
             vexDr.setPosition(podPerfomPid + 0.5);
@@ -218,6 +222,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         pidPod.setTolerance(Automatizari_config.tolerancePod);
         do {
+
+            update();
+            updatePoseEstimate();
+
             podPerfomPid = pidPod.performPID(potentiometruValue);
             if (podPerfomPid * podPerfomPid > 0.25) podPerfomPid = Math.signum(podPerfomPid) * 0.5;
             vexDr.setPosition(podPerfomPid + 0.5);
@@ -272,6 +280,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         while (!pidScissorDr.onTarget()) {
+            update();
+            updatePoseEstimate();
         }
         waitForTick(300);
         if(pidScissorDr.getSetpoint() == 0){
@@ -325,6 +335,18 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         goScissorAgr(700);
         goPodRulant(3000, 1700, configs.pozitie_servoClamp_desprindere);
         goPodRulant(Automatizari_config.minPodValue);
+        goScissor(0);
+        NOTDUCK = false;
+    }
+
+    public void extensieScissor(){
+        NOTDUCK = true;
+        goScissorAgr(700);
+        goPodRulant(2500);
+    }
+
+    public void homeScissor(){
+        goPodRulant(0);
         goScissor(0);
         NOTDUCK = false;
     }

@@ -13,9 +13,8 @@ public class TeleOP_Servo extends OpMode {
     @Override
     public void init() {
         servoPlatformaDr = hardwareMap.get(ServoImplEx.class,configs.servoClampName);
-        servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
-    //    servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
-        servoPlatformaDr.setPosition(0.65);
+     //   servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
+        servoPlatformaSt = hardwareMap.get(ServoImplEx.class,configs.servoPlatformaStName);
         systime= System.currentTimeMillis();
         Servo.start();
     }
@@ -27,7 +26,7 @@ public class TeleOP_Servo extends OpMode {
         public void run() {
             while (!stop) {
                 if (systime + 200 < System.currentTimeMillis()) {
-                    /*if (gamepad1.dpad_left && pozStsus < 1) {
+                   /* if (gamepad1.dpad_left && pozStsus < 1) {
                         pozStsus += 0.01;
                         servoPlatformaSt.setPosition(pozStsus);
                         systime = System.currentTimeMillis();
@@ -43,28 +42,42 @@ public class TeleOP_Servo extends OpMode {
                         systime = System.currentTimeMillis();
                     } else if (gamepad1.dpad_down && pozStjos > 0) {
                         pozStjos -= 0.01;
-                        servoPlatformaSt.setPosition(pozStjos);+
+                        servoPlatformaSt.setPosition(pozStjos);
                         systime = System.currentTimeMillis();
                     }*/
             if(gamepad1.a && pozDrsus <= 1) {
                 pozDrsus += 0.01;
                 servoPlatformaDr.setPosition(pozDrsus);
+                servoPlatformaSt.setPosition(1-pozDrsus-0.03);
                 systime= System.currentTimeMillis();
 
             }else if(gamepad1.b && pozDrsus >= 0.5){
                 pozDrsus -= 0.01;
                 servoPlatformaDr.setPosition(pozDrsus);
+                servoPlatformaSt.setPosition(1-pozDrsus-0.03);
                 systime= System.currentTimeMillis();
             }
 
             else if(gamepad1.x && pozDrjos < 0.5){
                 pozDrjos += 0.01;
                 servoPlatformaDr.setPosition(pozDrjos);
+                servoPlatformaSt.setPosition(1-pozDrjos-0.03);
                 systime= System.currentTimeMillis();
             }
             else if(gamepad1.y && pozDrjos >= 0){
                 pozDrjos -= 0.01;
                 servoPlatformaDr.setPosition(pozDrjos);
+                servoPlatformaSt.setPosition(1-pozDrjos-0.03);
+                systime= System.currentTimeMillis();
+            }
+            else if(gamepad1.dpad_down){
+                servoPlatformaDr.setPosition(0);
+                servoPlatformaSt.setPosition(0.97);
+                systime= System.currentTimeMillis();
+            }
+            else if (gamepad1.dpad_up) {
+                servoPlatformaDr.setPosition(0.26);
+                servoPlatformaSt.setPosition(0.70);
                 systime= System.currentTimeMillis();
             }
             }}
@@ -74,6 +87,7 @@ public class TeleOP_Servo extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("dr: ", servoPlatformaDr.getPosition());
+        telemetry.addData("st",servoPlatformaSt.getPosition());
         telemetry.update();
     }
 
