@@ -12,8 +12,13 @@ import org.opencv.core.Mat;
 @Autonomous
 public class AutoBlue_v1 extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
+
+
+    PIDControllerAdevarat pidCam = new PIDControllerAdevarat(0,0,0);
+    boolean isCollected = false;
+
+
     int caz;
-    Pose2d currentPos;
     SampleMecanumDriveREVOptimized drive;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -21,6 +26,9 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive = new SampleMecanumDriveREVOptimized(hardwareMap);
         drive.Init(hardwareMap);
         drive.setPoseEstimate(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)));
+        pidCam.setSetpoint(100);
+        pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
+        pidCam.enable();
         while (!isStarted()) {
             telemetry.addData("Ceva: ", cam.skystoneDetectorModified.foundScreenPositions().get(0).x);
 
@@ -68,16 +76,16 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(true)
-                        .splineTo(new Pose2d(10*2.54,38*2.54 ,Math.toRadians(-180)))
-                        .splineTo(new Pose2d(43.5*2.54,30*2.54,Math.toRadians(-270)))
+                        .splineTo(new Pose2d(10 * 2.54,38 * 2.54 ,Math.toRadians(-180)))
+                        .splineTo(new Pose2d(43 * 2.54, 31 * 2.54, Math.toRadians(-270)))
                         .build()
         );
         drive.prindrePlate();
-
-        drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
-        //drive.startColectReverse();
-        sleep(1000);
-        drive.aruncaCuburi();
+        drive.startColectReverse();
+        //drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+        sleep(2000);
+        //drive.stopColect();
+        //drive.aruncaCuburi();
         /*
         currentPos = drive.getPoseEstimate();
 
@@ -91,15 +99,22 @@ public class AutoBlue_v1 extends LinearOpMode {
         //drive.startColectReverse();
 
         /**tras placa*/
+        drive.turnSync(Math.toRadians(10));
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(false)
-                        .splineTo(new Pose2d(38*2.54,50*2.54,Math.toRadians(-230)))
-                        .splineTo(new Pose2d(10*2.54,38*2.54, Math.toRadians(-180)))
+                        .splineTo(new Pose2d(32*2.54,45*2.54,Math.toRadians(-180)))
+                        .splineTo(new Pose2d(20*2.54,40*2.54, Math.toRadians(-180)))
+                        .build()
+        );
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .setReversed(false)
+                        .splineTo(new Pose2d(15*2.54,38*2.54, Math.toRadians(-180)))
                         .build()
         );
         drive.startColect();
-        /**cub 2*/
+        //cub 2
         drive.desprindrePlate();
         sleep(1000);
 
@@ -135,10 +150,32 @@ public class AutoBlue_v1 extends LinearOpMode {
                 drive.trajectoryBuilder()
                         .setReversed(true)
                         .splineTo(new Pose2d(-12.5 * 2.54, 38 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(10 * 2.54, 38 * 2.54, Math.toRadians(-180)))
+                        .splineTo(new Pose2d(12 * 2.54, 38 * 2.54, Math.toRadians(-180)))
                         .build()
         );
-        drive.aruncaCuburi();
+        drive.turnSync(Math.toRadians(-100));
+        drive.startColectReverse();
+        sleep(1000);
+        drive.stopColect();
+        drive.turnSync(Math.toRadians(100));
         drive.stop = true;
+    }
+
+    public void colectCub(){
+        double power = 0.3, camPower;
+        cam.startDetection(new StoneDetector(480,640));
+        while (!isCollected) {
+            if(cam.skystoneDetectorModified.foundRectangles().get(0).width < 50){
+                power = 0.2;
+            }
+            else{
+                power = 0.3;
+            }
+            isCollected = drive.touchGheara.isPressed();
+            pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
+            camPower = pidCam.performPID(cam.skystoneDetectorModified.foundRectangles().get(0).x + (cam.skystoneDetectorModified.foundRectangles().get(0).width) / 2);
+            drive.setMotorPowers(power-camPower, power-camPower, power+camPower, power+camPower);
+        }
+        drive.setMotorPowers(0,0,0,0);
     }
 }

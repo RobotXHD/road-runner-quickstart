@@ -23,6 +23,14 @@ public class StoneDetector extends DogeCVColorFilter {
         rect = new Rect(x,y,width,height);
     }
 
+    StoneDetector(int Width, int Height){
+        x = 0;
+        y = 0;
+        width = Width;
+        height = Height;
+        rect = new Rect(x,y,width,height);
+    }
+
     @Override
     public void process(Mat input, Mat mask){
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3,5));

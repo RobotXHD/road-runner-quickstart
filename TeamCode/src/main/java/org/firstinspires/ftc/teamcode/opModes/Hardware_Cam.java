@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.opModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.opencv.core.Point;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 
@@ -44,6 +46,11 @@ public class Hardware_Cam extends LinearOpMode {
     }
     public void startDetection(){
         webcam.startStreaming(resWidth, resHeight);
+    }
+    public void startDetection(DogeCVColorFilter filter){
+        webcam.stopStreaming();
+        skystoneDetectorModified.filter = filter;
+        webcam.startStreaming(resWidth,resHeight,OpenCvCameraRotation.SIDEWAYS_LEFT);
     }
     public void stopDetection(){
         webcam.stopStreaming();
