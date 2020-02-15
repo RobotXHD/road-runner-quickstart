@@ -42,8 +42,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
-/*
- * Optimized mecanum drive implementation for REV ExHs. The time savings may significantly improve
+/*  Optimized mecanum drive implementation for REV ExHs. The time savings may significantly improve
  * trajectory following performance with moderate additional complexity.
  */
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
@@ -51,28 +50,22 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
     private List<ExpansionHubMotor> motors;
     private BNO055IMU imu;
-
-    private RevBulkData bulkDataControl;
     public Servo servoPlatformaSt, servoPlatformaDr, servoCapstone;
-    public ExpansionHubEx expansionHubControl;
     public DcMotorEx scissorDreapta;
     public DcMotorEx scissorStanga;
     public DcMotorEx motorColectSt, motorColectDr;
     public TouchSensor touchScissorDr, touchScissorSt, touchGheara;
     public boolean stop = false;
-    public double verifications, verificationPod, podPerfomPid, powerSc = 0;
+    public double verificationPod, podPerfomPid, powerSc = 0;
     public volatile double encoderDreapta, vitezaDreapta, potentiometruValue, lastPotVal;
     public PIDControllerAdevarat pidScissorDr = new PIDControllerAdevarat(0, 0, 0);
     public PIDControllerAdevarat pidScissorDrAgr = new PIDControllerAdevarat(0, 0, 0);
     public PIDControllerAdevarat pidPod = new PIDControllerAdevarat(0, 0, 0);
-    public PIDControllerAdevarat pidCam = new PIDControllerAdevarat(camConfig.kp,camConfig.ki,camConfig.kd);
     public ServoImplEx vexSt, vexDr, servoClamp;
     public AnalogInput potentiometru;
-    public double calibScissor = 15.719;
     public double lastPos, potSpeed, time, lastTime;
     public volatile boolean NOTDUCK = false;
     private FtcDashboard dashboard = FtcDashboard.getInstance();
-    private TelemetryPacket packet = new TelemetryPacket();
     private ElapsedTime period = new ElapsedTime();
 
 
@@ -82,10 +75,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
 
 
-
-
     public void Init(HardwareMap hardwareMap) {
-        expansionHubControl = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubOdometrieName);
+
 
         potentiometru = hardwareMap.analogInput.get(configs.potentiometruName);
 
@@ -124,7 +115,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         servoCapstone.setPosition(0.7);
 
-        pidCam.setSetpoint(100);
 
         pidScissorDr.setSetpoint(0);
         pidScissorDrAgr.setSetpoint(0);
@@ -292,7 +282,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
     }
 
-    public void goCuburi(int cub) {
+   /* public void goCuburi(int cub) {
         //TODO: To stop scissor from crashing hard
         final int ROBOT_SAFE_DISTANCE = 700;
         final int BRIDGE_EXTENDED_POSITION = 2200;
@@ -329,7 +319,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
         }
     }
-
+*/
     public void aruncaCuburi(){
         NOTDUCK = true;
         goScissorAgr(700);
@@ -346,8 +336,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         public void run() {
             while (!stop) {
                 if(NOTDUCK) {
-                    bulkDataControl = expansionHubControl.getBulkInputData();
-                    pot = bulkDataControl.getAnalogInputValue(potentiometru);
+                    pot = potentiometru.getVoltage() * 1000;
                     lastTime = time;
                     lastPotVal = potentiometruValue;
                     potentiometruValue = pot;
@@ -390,13 +379,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                     encDr = encoderDreapta;
                     vDr = Math.abs(vitezaDreapta);
                     if (pidScissorDr.enabled()) {
-                        packet.put("vdr", vDr);
-                        packet.clearLines();
                         if (lastPos - pidScissorDr.getSetpoint() > 0) {
                             if (brakeDist + pidScissorDr.getSetpoint() > encDr && pidScissorDr.getSetpoint() < encDr) {
                                 pidScissorDr.performPID(encDr);
                                 power = 0;
-                                packet.put("brakeDist", brakeDist);
                             } else {
                                 brakeDist = 0.08 * vDr;
                                 power = pidScissorDr.performPID(encDr);
@@ -404,8 +390,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                         } else {
                             power = pidScissorDr.performPID(encDr);
                         }
-                        dashboard.sendTelemetryPacket(packet);
-                        packet.clearLines();
                     } else if (pidScissorDrAgr.enabled()) {
                         power = pidScissorDrAgr.performPID(encDr);
                     } else if (!touchScissorSt.isPressed() || !touchScissorDr.isPressed()) {

@@ -12,12 +12,8 @@ import org.opencv.core.Mat;
 @Autonomous
 public class AutoBlue_v1 extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
-
-
     PIDControllerAdevarat pidCam = new PIDControllerAdevarat(0,0,0);
     boolean isCollected = false;
-
-
     int caz;
     SampleMecanumDriveREVOptimized drive;
     @Override
@@ -81,11 +77,11 @@ public class AutoBlue_v1 extends LinearOpMode {
                         .build()
         );
         drive.prindrePlate();
-        drive.startColectReverse();
-        //drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+        //drive.startColectReverse();
+        drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         sleep(2000);
-        //drive.stopColect();
-        //drive.aruncaCuburi();
+        drive.stopColect();
+        drive.aruncaCuburi();
         /*
         currentPos = drive.getPoseEstimate();
 
@@ -100,6 +96,7 @@ public class AutoBlue_v1 extends LinearOpMode {
 
         /**tras placa*/
         drive.turnSync(Math.toRadians(10));
+
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(false)
