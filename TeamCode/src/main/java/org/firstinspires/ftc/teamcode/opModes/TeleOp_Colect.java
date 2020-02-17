@@ -124,13 +124,11 @@ public class TeleOp_Colect extends OpMode {
 
 
                powerSlider = gamepad2.right_stick_y;
-                if (powerSlider < 0) {
+                if (powerSlider != 0) {
                     vexDr.setPosition(0.5 + powerSlider / 2);
                     vexSt.setPosition(0.5 - powerSlider / 2);
-                } else if (powerSlider > 0) {
-                    vexDr.setPosition(0.5 + powerSlider / 2);
-                    vexSt.setPosition(0.5 - powerSlider / 2);
-                } else {
+                }
+                else {
                     vexDr.setPosition(0.5);
                     vexSt.setPosition(0.5);
                 }

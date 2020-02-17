@@ -161,13 +161,14 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
     public void prindrePlate() {
-        servoPlatformaDr.setPosition(0);
-        servoPlatformaSt.setPosition(0.97);
+        servoPlatformaDr.setPosition(0.16);
+        servoPlatformaSt.setPosition(0.77);
     }
 
     public void desprindrePlate() {
-        servoPlatformaDr.setPosition(0.26);
-        servoPlatformaSt.setPosition(0.70);
+        servoPlatformaDr.setPosition(0.27);
+        servoPlatformaSt.setPosition(0.66);
+
     }
 
     public void goPodRulant(double position) {
@@ -191,10 +192,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             vexDr.setPosition(podPerfomPid + 0.5);
             vexSt.setPosition(-podPerfomPid + 0.5);
 
-            if(Math.abs(potSpeed) > 0.5){
+            if(Math.abs(potSpeed) > 0.5 && (potentiometruValue < 500 || potentiometruValue > 2000)){
                 isMoving = true;
             }
-            if(isMoving && Math.abs(potSpeed) < 0.2 || pidPod.onTarget()){
+            if(isMoving && Math.abs(potSpeed) < 0.1 || pidPod.onTarget()){
                 verificationPod++;
             }
             else{

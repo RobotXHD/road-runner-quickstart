@@ -12,7 +12,7 @@ public class TeleOP_Servo extends OpMode {
 
     @Override
     public void init() {
-        servoPlatformaDr = hardwareMap.get(ServoImplEx.class,configs.servoClampName);
+        servoPlatformaDr = hardwareMap.get(ServoImplEx.class,configs.servoPlatformaDrName);
      //   servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
         servoPlatformaSt = hardwareMap.get(ServoImplEx.class,configs.servoPlatformaStName);
         systime= System.currentTimeMillis();
@@ -48,26 +48,26 @@ public class TeleOP_Servo extends OpMode {
             if(gamepad1.a && pozDrsus <= 1) {
                 pozDrsus += 0.01;
                 servoPlatformaDr.setPosition(pozDrsus);
-                servoPlatformaSt.setPosition(1-pozDrsus-0.03);
+                servoPlatformaSt.setPosition(1-pozDrsus-0.07);
                 systime= System.currentTimeMillis();
 
             }else if(gamepad1.b && pozDrsus >= 0.5){
                 pozDrsus -= 0.01;
                 servoPlatformaDr.setPosition(pozDrsus);
-                servoPlatformaSt.setPosition(1-pozDrsus-0.03);
+                servoPlatformaSt.setPosition(1-pozDrsus-0.07);
                 systime= System.currentTimeMillis();
             }
 
             else if(gamepad1.x && pozDrjos < 0.5){
                 pozDrjos += 0.01;
                 servoPlatformaDr.setPosition(pozDrjos);
-                servoPlatformaSt.setPosition(1-pozDrjos-0.03);
+                servoPlatformaSt.setPosition(1-pozDrjos-0.07);
                 systime= System.currentTimeMillis();
             }
             else if(gamepad1.y && pozDrjos >= 0){
                 pozDrjos -= 0.01;
                 servoPlatformaDr.setPosition(pozDrjos);
-                servoPlatformaSt.setPosition(1-pozDrjos-0.03);
+                servoPlatformaSt.setPosition(1-pozDrjos-0.07);
                 systime= System.currentTimeMillis();
             }
             else if(gamepad1.dpad_down){
