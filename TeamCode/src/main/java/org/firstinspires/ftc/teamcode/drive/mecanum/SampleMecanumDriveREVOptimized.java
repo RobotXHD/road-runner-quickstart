@@ -343,10 +343,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
 */
    /***/
-   public void extensieScissorCub2(double triggerTICK){
+   public void extensieScissor(double triggerTICK){
        NOTDUCK = true;
-       goScissorAgr(700);
-       goPodRulant(2500, triggerTICK, configs.pozitie_servoClamp_desprindere);
+       goScissorAgr(680);
+       goPodRulant(1500, triggerTICK, configs.pozitie_servoClamp_desprindere);
    }
     public void aruncaCuburi(){
         NOTDUCK = true;
@@ -359,8 +359,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public void extensieScissor(){
         NOTDUCK = true;
-        goScissorAgr(700);
-        goPodRulant(2500);
+        goScissorAgr(680);
+        goPodRulant(2000);
     }
 
     public void homeScissor(){
@@ -376,7 +376,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         public void run() {
             while (!stop) {
                 if(NOTDUCK) {
-                    pot = potentiometru.getVoltage() * 1000;
+                    pot = potentiometru.getVoltage() * 1000 - offsetBridge;
                     lastTime = time;
                     lastPotVal = potentiometruValue;
                     potentiometruValue = pot;

@@ -34,6 +34,7 @@ public class configs {
     public static final String encSpName = "scissorDr";
     public static final String encDrName = "colectSt";
 
+
     public static final String scissorDrName = "scissorDr";
     public static final String scissorStName = "scissorSt";
     public static final String colectDrName = "colectDr";

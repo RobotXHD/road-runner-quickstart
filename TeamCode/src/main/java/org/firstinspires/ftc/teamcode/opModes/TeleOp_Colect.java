@@ -28,7 +28,7 @@ public class TeleOp_Colect extends OpMode {
     private DcMotorEx scissorDreapta;
     private DcMotorEx scissorStanga;
     private DcMotor motorColectSt, motorColectDr;
-    private Servo servoPlatformaSt, servoPlatformaDr, servoCapstone;
+    private Servo servoPlatformaSt, servoPlatformaDr, servoCapstone, servoParcare;
     private ServoImplEx vexSt, vexDr, servoClamp;
     /**
      * variable for changing the movement speed of the robot
@@ -144,10 +144,10 @@ public class TeleOp_Colect extends OpMode {
 
             if (gamepad1.left_trigger > 0 && servoParcarePosition < 1) {
                 servoParcarePosition += gamepad1.left_trigger / 40;
-                // servoParcare.setPosition(servoParcarePosition);
+                 servoParcare.setPosition(servoParcarePosition);
             } else if (gamepad1.right_trigger > 0 && servoParcarePosition > 0.4) {
                 servoParcarePosition -= gamepad1.right_trigger / 40;
-                //servoParcare.setPosition(servoParcarePosition);
+                servoParcare.setPosition(servoParcarePosition);
             }
 
             servoCapstone.setPosition((gamepad2.right_trigger) / 2);
@@ -252,7 +252,7 @@ public class TeleOp_Colect extends OpMode {
         servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
         servoCapstone = hardwareMap.servo.get(configs.servoCapstoneName);
         pot = hardwareMap.analogInput.get(configs.potentiometruName);
-        // servoParcare = hardwareMap.servo.get("parcare");
+        servoParcare = hardwareMap.servo.get(configs.servoParcareName);
 
         vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
         vexSt = hardwareMap.get(ServoImplEx.class, "vexSt");

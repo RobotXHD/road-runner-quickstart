@@ -93,6 +93,7 @@ public class AutoBlue_v1 extends LinearOpMode {
         } else if (caz == 0) {
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
+
                             .setReversed(false)
                             .strafeTo(new Vector2d(-45.5 * 2.54, 55.7 * 2.54))
                             .lineTo(new Vector2d(-45.5 * 2.54, 36 * 2.54), new LinearInterpolator(Math.toRadians(-90), Math.toRadians(-45)))
@@ -138,7 +139,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                 isScissorExtended = true;
             }
         }
-
+        drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
         Trajectory trajectory = new TrajectoryBuilder(drive.getPoseEstimate(), new DriveConstraints(20, 150, 0, 200, 360, 0))
                 .setReversed(true)
                 .splineTo(new Pose2d(43.5 * 2.54, 32 * 2.54, Math.toRadians(-270)))
@@ -150,7 +151,6 @@ public class AutoBlue_v1 extends LinearOpMode {
         );
 
         drive.prindrePlate();
-        drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
         asteptare(500);
         isCubeCaught = false;
         isScissorExtended = false;
@@ -220,7 +220,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                             .build()
             );
         }
-        while(drive.isBusy()){
+        while (drive.isBusy()) {
             drive.update();
             drive.updatePoseEstimate();
 
@@ -249,52 +249,73 @@ public class AutoBlue_v1 extends LinearOpMode {
 /***/
         isScissorExtended = false;
         isCubeThrown = false;
-        while(drive.isBusy()){
+        while (drive.isBusy()) {
             drive.update();
             drive.updatePoseEstimate();
-            if(!isScissorExtended && drive.getPoseEstimate().getX() > 12){
-                drive.extensieScissor();
+            if (!isScissorExtended && drive.getPoseEstimate().getX() > 12) {
+                drive.extensieScissor(750);
                 isScissorExtended = true;
             }
-            if(!isCubeThrown && drive.getPoseEstimate().getX() > 30){
+            if (!isCubeThrown && drive.getPoseEstimate().getX() > 30) {
                 drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
                 isCubeThrown = true;
             }
         }
-        drive.homeScissor();
+        if (cam.webcam.getFps() == 0) {
+            drive.homeScissor();
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .splineTo(new Pose2d(15, 38 * 2.54, Math.toRadians(-180)))
+                            .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
+                            .build()
+            );
+        } else {
+            drive.followTrajectory(
+                    drive.trajectoryBuilder()
+                            .splineTo(new Pose2d(15, 38 * 2.54, Math.toRadians(-180)))
+                            .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
+                            .splineTo(new Pose2d(-50, 38 * 2.54, Math.toRadians(-140)))
+                            .build()
+            );
+            drive.homeScissor();
+            while (drive.isBusy()) {
+                drive.update();
+                drive.updatePoseEstimate();
+            }
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(15, 38 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(-50, 38 * 2.54, Math.toRadians(-140)))
-                        .build()
-        );
-        drive.homeScissor();
-        while(drive.isBusy()){
-            drive.update();
-            drive.updatePoseEstimate();
+            colectCub();
+            drive.followTrajectory(
+                    drive.trajectoryBuilder()
+                            .setReversed(true)
+                            .splineTo(new Pose2d(-15 * 2.54, 38 * 2.54, Math.toRadians(-180)))
+                            .splineTo(new Pose2d(10 * 2.54, 38 * 2.54, Math.toRadians(-180)))
+                            .splineTo(new Pose2d(38 * 2.54, 55 * 2.54, Math.toRadians(-180)))
+                            .build()
+            );
+            while (drive.isBusy()) {
+                drive.update();
+                drive.updatePoseEstimate();
+                if (!isScissorExtended && drive.getPoseEstimate().getX() > 12) {
+                    drive.extensieScissor(750);
+                    isScissorExtended = true;
+                }
+                if (!isCubeThrown && drive.getPoseEstimate().getX() > 30) {
+                    drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+                    isCubeThrown = true;
+                }
+            }
+            drive.followTrajectory(
+                    drive.trajectoryBuilder()
+                            .setReversed(false)
+                            .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
+                            .build()
+            );
+            drive.homeScissor();
+            while (drive.isBusy()) {
+                drive.update();
+                drive.updatePoseEstimate();
+            }
         }
-
-        colectCub();
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .setReversed(true)
-                        .splineTo(new Pose2d(-15 * 2.54, 38 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(10 * 2.54, 38 * 2.54, Math.toRadians(-180)))
-                        .splineTo(new Pose2d(38 * 2.54, 55 * 2.54, Math.toRadians(-180)))
-                        .build()
-        );
-        drive.extensieScissor();
-        drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
-        asteptare(500);
-        drive.homeScissor();
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .setReversed(false)
-                        .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
-                        .build()
-        );
         /*
 
         sleep(5000);
@@ -332,7 +353,7 @@ public class AutoBlue_v1 extends LinearOpMode {
     /***/
     public Thread inFlightPipelineChange = new Thread(() -> {
         boolean isTerminated = false;
-        while(opModeIsActive() && !isTerminated){
+        while (opModeIsActive() && !isTerminated) {
         }
     });
 
@@ -340,7 +361,7 @@ public class AutoBlue_v1 extends LinearOpMode {
     public void colectCub() {
         double power, camPower;
         drive.Colect(-1);
-        cam.startDetection(new org.firstinspires.ftc.teamcode.opModes.StoneDetector(480 ,640));
+        cam.startDetection(new org.firstinspires.ftc.teamcode.opModes.StoneDetector(480, 640));
         telemetry.update();
         while (!isCollected) {
             pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
@@ -360,9 +381,9 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.setMotorPowers(0, 0, 0, 0);
     }
 
-    public void asteptare(int milisecunde){
+    public void asteptare(int milisecunde) {
         systemTime = System.currentTimeMillis();
-        while(systemTime + milisecunde > System.currentTimeMillis());
+        while (systemTime + milisecunde > System.currentTimeMillis()) ;
 
     }
 }
