@@ -5,7 +5,6 @@ public class configs {
     public static final double pozitie_servoRot_minim = 0.06;
     public static final double pozitie_servorSj_minim = 0.08;
     public static final double pozitie_servoMonster_minim = 0.11;
-    public static final double pozitie_servoClamp_desprindere = 0.4;
     public static final double pozitie_servoPlatformaDr_minim = 0.33;
     public static final double pozitie_servoPlatformaSt_minim = 0.97;
 
@@ -13,9 +12,13 @@ public class configs {
     public static final double pozitie_servoRot_maxim= 0.8;
     public static final double pozitie_servorSj_maxim = 0.71;
     public static final double pozitie_servoMonster_maxim = 0.86;
-    public static final double pozitie_servoClamp_prindere = 0.85;
     public static final double pozitie_servoPlatformaDr_maxim = 1;
     public static final double pozitie_servoPlatformaSt_maxim = 0.61;
+    //desprindere
+    public static final double pozitie_servoClamp_desprindere = 0.4;
+  //prindere
+    public static final double pozitie_servoCapstone_prindere = 0.22;
+    public static final double pozitie_servoClamp_prindere = 0.85;
 
     //levii
     public static final int aMini = 120, aMaxi = 157;

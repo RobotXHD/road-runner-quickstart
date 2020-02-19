@@ -64,8 +64,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public ServoImplEx vexSt, vexDr, servoClamp;
     public AnalogInput potentiometru;
     public double lastPos, potSpeed, time, lastTime;
-    public volatile boolean NOTDUCK = false;
+    public volatile boolean NOTDUCK = false, isOffseted = false, firstCycle = true;
     private FtcDashboard dashboard = FtcDashboard.getInstance();
+    private TelemetryPacket packet = new TelemetryPacket();
     private ElapsedTime period = new ElapsedTime();
 
 
@@ -113,8 +114,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         touchScissorSt = hardwareMap.touchSensor.get(configs.touchScissorStName);
         touchGheara = hardwareMap.touchSensor.get(configs.touchGhearaName);
 
-        servoCapstone.setPosition(0.7);
-
+        servoCapstone.setPosition(configs.pozitie_servoCapstone_prindere);
 
         pidScissorDr.setSetpoint(0);
         pidScissorDrAgr.setSetpoint(0);
@@ -183,6 +183,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         pidPod.setTolerance(Automatizari_config.tolerancePod);
         do {
+            packet.put("POD", potentiometruValue);
+            dashboard.sendTelemetryPacket(packet);
+            packet.clearLines();
 
             update();
             updatePoseEstimate();
@@ -204,6 +207,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         } while (verificationPod < Automatizari_config.targetVerifications);
         vexSt.setPosition(0.5);
         vexDr.setPosition(0.5);
+        if(pidPod.getSetpoint() == 0){
+            isOffseted = true;
+        }
     }
 
     public void goPodRulant(double position, double triggerTick, double servoPosition) {
@@ -255,6 +261,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         } while (verificationPod < Automatizari_config.targetVerifications);
         vexSt.setPosition(0.5);
         vexDr.setPosition(0.5);
+        if(pidPod.getSetpoint() == 0){
+            isOffseted = true;
+        }
+
     }
 
     public void goScissorAgr(double position) {
@@ -330,7 +340,13 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
         }
     }
+
 */
+   public void extensieScissorCub2(double triggerTICK){
+       NOTDUCK = true;
+       goScissorAgr(700);
+       goPodRulant(2500, triggerTICK, configs.pozitie_servoClamp_desprindere);
+   }
     public void aruncaCuburi(){
         NOTDUCK = true;
         goScissorAgr(700);
@@ -353,7 +369,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
     private Thread readControl = new Thread(new Runnable() {
-        double pot;
+        double pot, offsetBridge = 0;
 
         @Override
         public void run() {
@@ -369,6 +385,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                     }
                     potSpeed = (pot - lastPotVal) / (time - lastTime) * 1000000;
                     waitForTick(50);
+                    if(isOffseted || firstCycle){
+                        isOffseted = false;
+                        firstCycle = false;
+                        offsetBridge = pot;
+                    }
                 }
             }
         }

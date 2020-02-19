@@ -300,6 +300,8 @@ public class TeleOp_Colect extends OpMode {
         Colect.start();
         Chassis.start();
         current.start();
+
+        telemetry.setMsTransmissionInterval(25);
         //automation.start();
     }
 
