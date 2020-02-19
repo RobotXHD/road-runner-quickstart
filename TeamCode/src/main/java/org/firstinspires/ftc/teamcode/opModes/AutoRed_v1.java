@@ -281,12 +281,13 @@ public class AutoRed_v1 extends LinearOpMode {
         );
         drive.stop = true;
     }
+
+
     public Thread inFlightPipelineChange = new Thread(() -> {
         boolean isTerminated = false;
         while(opModeIsActive() && !isTerminated){
         }
     });
-
 
 
     public void colectCub() {

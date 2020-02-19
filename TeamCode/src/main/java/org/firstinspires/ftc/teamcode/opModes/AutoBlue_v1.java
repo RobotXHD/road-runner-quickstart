@@ -29,12 +29,14 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive = new SampleMecanumDriveREVOptimized(hardwareMap);
         drive.Init(hardwareMap);
         drive.setPoseEstimate(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)));
+
         pidCam.setSetpoint(100);
         pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
         pidCam.enable();
+
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
         telemetry.setMsTransmissionInterval(50);
-
+/*
         Trajectory left1 = new TrajectoryBuilder(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)), DriveConstants.BASE_CONSTRAINTS)
                 .setReversed(false)
                 .strafeTo(new Vector2d(-39 * 2.54, 60.66 * 2.54))
@@ -56,7 +58,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                 .lineTo(new Vector2d(-53 * 2.54, 34 * 2.54), new LinearInterpolator(Math.toRadians(-135), Math.toRadians(0)))
                 .lineTo(new Vector2d(-61 * 2.54, 26 * 2.54), new LinearInterpolator(Math.toRadians(-135), Math.toRadians(0)))
                 .build();
-
+*/
         /** detection */
         inFlightPipelineChange.start();
         while (!isStarted()) {
@@ -226,6 +228,7 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.Colect(0.5);
         asteptare(70);
         drive.Colect(-1);
+        /***/
         systemTime = System.currentTimeMillis();
         while (!drive.touchGheara.isPressed() && opModeIsActive() && (systemTime + 3000 > System.currentTimeMillis())) {
             if (systemTime + 1000 > System.currentTimeMillis()) {
@@ -243,7 +246,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                         .splineTo(new Pose2d(37 * 2.54, 48 * 2.54, Math.toRadians(-180)))
                         .build()
         );
-
+/***/
         isScissorExtended = false;
         isCubeThrown = false;
         while(drive.isBusy()){
@@ -325,14 +328,15 @@ public class AutoBlue_v1 extends LinearOpMode {
          */
         drive.stop = true;
     }
+
+    /***/
     public Thread inFlightPipelineChange = new Thread(() -> {
         boolean isTerminated = false;
         while(opModeIsActive() && !isTerminated){
         }
     });
 
-
-
+    /***/
     public void colectCub() {
         double power, camPower;
         drive.Colect(-1);
@@ -355,6 +359,7 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.stopColect();
         drive.setMotorPowers(0, 0, 0, 0);
     }
+
     public void asteptare(int milisecunde){
         systemTime = System.currentTimeMillis();
         while(systemTime + milisecunde > System.currentTimeMillis());

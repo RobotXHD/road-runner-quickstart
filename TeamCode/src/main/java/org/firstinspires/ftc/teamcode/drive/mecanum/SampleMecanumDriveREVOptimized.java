@@ -342,6 +342,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
 */
+   /***/
    public void extensieScissorCub2(double triggerTICK){
        NOTDUCK = true;
        goScissorAgr(700);

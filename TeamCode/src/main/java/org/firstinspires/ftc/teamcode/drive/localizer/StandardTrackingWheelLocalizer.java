@@ -62,7 +62,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         backEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-   public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
+   /*public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
                 new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
                 new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
@@ -75,7 +75,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         expansionHub = hardwareMap.get(ExpansionHubEx.class, configs.expansionHubSistemeName);
         leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
         backEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
+    }*/
 
     public static double encoderTicksToCms(int ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
