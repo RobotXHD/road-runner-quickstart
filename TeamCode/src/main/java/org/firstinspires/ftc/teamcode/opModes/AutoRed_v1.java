@@ -317,5 +317,4 @@ public class AutoRed_v1 extends LinearOpMode {
 
     }
 
-
 }

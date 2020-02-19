@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -18,8 +17,7 @@ import static java.lang.Math.abs;
 
 @TeleOp
 public class TeleOp_Colect extends OpMode {
-    /**declare the motors*/
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    /**declare the motors and expansionHub and the servos*/
     private ExpansionHubEx expansionHubOdometrie, expansionHubSisteme;
     private DcMotorEx motordf;
     private DcMotorEx motorsf;
@@ -32,20 +30,16 @@ public class TeleOp_Colect extends OpMode {
     private ServoImplEx vexSt, vexDr, servoClamp;
     /**variable for changing the movement speed of the robot*/
     private int v = 2;
-    /**
-     * variables for calculating the power for motors
-     */
+    /**variables for calculating the power for motors*/
     private double df;
     private double sf;
     private double ds;
     private double ss;
     private double max;
     private double sysTime;
-    private long encScissorDr, encScissorSt, offsetDr = 0, offsetSt = 0;
-    /**
-     * variables for holding the gamepad joystick values;
-     * we don't want to access them too many times in a loop
-     */
+   // private long encScissorDr, encScissorSt, offsetDr = 0, offsetSt = 0;
+    /**variables for holding the gamepad joystick values;
+     * we don't want to access them too many times in a loop*/
     private double forward, right, clockwise, powerLimit = 1, leftStickY, servoParcarePosition = 0.4;
     private boolean stop;
     private boolean apoz = false, alast = true, apoz2 = false, alast2 = true, apoz3 = false, alast3 = true, eStrans = false;
@@ -59,17 +53,17 @@ public class TeleOp_Colect extends OpMode {
         public void run() {
             /**repeat until the program stops*/
             while (!stop) {
-
-                leftStickY = -gamepad2.left_stick_y;
+                /**reseting the encoders for the scissor motor*/
                 if(touchScissorDr.isPressed() || touchScissorSt.isPressed()){
                     scissorStangaOffset = scissorStanga.getCurrentPosition();
                 }
 
+                leftStickY = -gamepad2.left_stick_y;
                 scissorStanga.setPower(leftStickY);
                 scissorDreapta.setPower(leftStickY);
 
 
-                /**set the collector motors on or off using the toggle*/
+                /**setting the collector motors on or off using the toggle*/
                 boolean abut = gamepad2.b;
                 if (alast != abut) {
                     if (gamepad2.b) {
@@ -102,12 +96,6 @@ public class TeleOp_Colect extends OpMode {
                     }
                     alast2 = abut2;
                 }
-                if(touchGheara.isPressed() && motorColectDr.getPower() != 0){
-                    servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
-                    motorColectSt.setPower(0);
-                    motorColectDr.setPower(0);
-                    apoz3 = true;
-                }
 
                 boolean abut3 = gamepad2.y;
                 if (alast3 != abut3) {
@@ -120,6 +108,14 @@ public class TeleOp_Colect extends OpMode {
                         }
                     }
                     alast3 = abut3;
+                }
+
+                /**closing the clamp automatically and stopping the cube collecting motors when the claw's switch is pressed by the cube */
+                if(touchGheara.isPressed() && motorColectDr.getPower() != 0){
+                    servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+                    motorColectSt.setPower(0);
+                    motorColectDr.setPower(0);
+                    apoz3 = true;
                 }
 
 
@@ -169,7 +165,7 @@ public class TeleOp_Colect extends OpMode {
                 forward = -gamepad1.left_stick_y;
                 right = gamepad1.left_stick_x;
                 clockwise = -gamepad1.right_stick_x;
-
+                /**limiting the power for the chassis expansionhub*/
                 if(expansionHubSistemeCurrent > 5){
                     powerLimit = expansionHubOdometrieCurrent > 2 ? 2/expansionHubOdometrieCurrent : 1;
                 }
@@ -210,7 +206,7 @@ public class TeleOp_Colect extends OpMode {
             }
         }
     });
-
+/**measure the current draw for each of expansionHub*/
     private Thread current = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -221,7 +217,7 @@ public class TeleOp_Colect extends OpMode {
         }
     });
 
-    public Thread automation = new Thread(new Runnable() {
+   /* public Thread automation = new Thread(new Runnable() {
         @Override
         public void run() {
             while (!stop) {
@@ -233,7 +229,7 @@ public class TeleOp_Colect extends OpMode {
                 }
             }
         }
-    });
+    });*/
     @Override
     public void init() {
         /**initialization motors*/
@@ -275,7 +271,7 @@ public class TeleOp_Colect extends OpMode {
         vexDr.setPwmRange(new PwmControl.PwmRange(1000, 2000));
         vexSt.setPwmRange(new PwmControl.PwmRange(1000, 2000));
 
-        /**set the mode of the motors*/
+        /**setting the mode of the motors*/
         scissorStanga.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         scissorStanga.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         scissorDreapta.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -317,10 +313,7 @@ public class TeleOp_Colect extends OpMode {
         telemetry.update();
     }
 
-    /**
-
-     using the stop function to stop the threads
-     */
+    /**using the stop function to stop the thread*/
     public void stop() {
         stop = true;
     }
