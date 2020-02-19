@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,7 +17,9 @@ import static java.lang.Math.abs;
 
 @TeleOp
 public class TeleOp_Colect extends OpMode {
-    /**declare the motors and expansionHub and the servos*/
+    /**
+     * declare the motors and expansionHub and the servos
+     */
     private ExpansionHubEx expansionHubOdometrie, expansionHubSisteme;
     private DcMotorEx motordf;
     private DcMotorEx motorsf;
@@ -28,208 +30,205 @@ public class TeleOp_Colect extends OpMode {
     private DcMotor motorColectSt, motorColectDr;
     private Servo servoPlatformaSt, servoPlatformaDr, servoCapstone;
     private ServoImplEx vexSt, vexDr, servoClamp;
-    /**variable for changing the movement speed of the robot*/
+    /**
+     * variable for changing the movement speed of the robot
+     */
     private int v = 2;
-    /**variables for calculating the power for motors*/
+    /**
+     * variables for calculating the power for motors
+     */
     private double df;
     private double sf;
     private double ds;
     private double ss;
     private double max;
     private double sysTime;
-   // private long encScissorDr, encScissorSt, offsetDr = 0, offsetSt = 0;
-    /**variables for holding the gamepad joystick values;
-     * we don't want to access them too many times in a loop*/
+    // private long encScissorDr, encScissorSt, offsetDr = 0, offsetSt = 0;
+    /**
+     * variables for holding the gamepad joystick values;
+     * we don't want to access them too many times in a loop
+     */
     private double forward, right, clockwise, powerLimit = 1, leftStickY, servoParcarePosition = 0.4;
     private boolean stop;
     private boolean apoz = false, alast = true, apoz2 = false, alast2 = true, apoz3 = false, alast3 = true, eStrans = false;
-    private double powerColect = 1, powerSlider, scissorStangaOffset=0;
-    private TouchSensor  touchScissorDr, touchScissorSt, touchGheara;
+    private double powerColect = 1, powerSlider, scissorStangaOffset = 0;
+    private TouchSensor touchScissorDr, touchScissorSt, touchGheara;
     private volatile double expansionHubOdometrieCurrent, expansionHubSistemeCurrent;
     private AnalogInput pot;
 
-    private Thread Colect = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            /**repeat until the program stops*/
-            while (!stop) {
-                /**reseting the encoders for the scissor motor*/
-                if(touchScissorDr.isPressed() || touchScissorSt.isPressed()){
-                    scissorStangaOffset = scissorStanga.getCurrentPosition();
-                }
+    private Thread Colect = new Thread(() -> {
+        /**repeat until the program stops*/
+        while (!stop) {
+            /**reseting the encoders for the scissor motor*/
+            if (touchScissorDr.isPressed() || touchScissorSt.isPressed()) {
+                scissorStangaOffset = scissorStanga.getCurrentPosition();
+            }
 
-                leftStickY = -gamepad2.left_stick_y;
-                scissorStanga.setPower(leftStickY);
-                scissorDreapta.setPower(leftStickY);
+            leftStickY = -gamepad2.left_stick_y;
+            scissorStanga.setPower(leftStickY);
+            scissorDreapta.setPower(leftStickY);
 
 
-                /**setting the collector motors on or off using the toggle*/
-                boolean abut = gamepad2.b;
-                if (alast != abut) {
-                    if (gamepad2.b) {
-                        apoz = !apoz;
-                        if (apoz && !touchGheara.isPressed()) {
-                            motorColectSt.setPower(-powerColect);
-                            motorColectDr.setPower(powerColect);
-                            servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
-                            apoz3 = false;
-                        } else {
-                            motorColectSt.setPower(0);
-                            motorColectDr.setPower(0);
-                        }
+            /**setting the collector motors on or off using the toggle*/
+            boolean abut = gamepad2.b;
+            if (alast != abut) {
+                if (gamepad2.b) {
+                    apoz = !apoz;
+                    if (apoz && !touchGheara.isPressed()) {
+                        motorColectSt.setPower(-powerColect);
+                        motorColectDr.setPower(powerColect);
+                        servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+                        apoz3 = false;
+                    } else {
+                        motorColectSt.setPower(0);
+                        motorColectDr.setPower(0);
                     }
-                    alast = abut;
                 }
+                alast = abut;
+            }
 
-                boolean abut2 = gamepad2.x;
-                if (alast2 != abut2) {
-                    if (gamepad2.x) {
-                        apoz2 = !apoz2;
-                        if (apoz2 && !touchGheara.isPressed()) {
-                            motorColectSt.setPower(powerColect);
-                            motorColectDr.setPower(-powerColect);
-                   //         servoClamp.setPosition(0.65);
-                        } else {
-                            motorColectSt.setPower(0);
-                            motorColectDr.setPower(0);
-                        }
+            boolean abut2 = gamepad2.x;
+            if (alast2 != abut2) {
+                if (gamepad2.x) {
+                    apoz2 = !apoz2;
+                    if (apoz2 && !touchGheara.isPressed()) {
+                        motorColectSt.setPower(powerColect);
+                        motorColectDr.setPower(-powerColect);
+                        //         servoClamp.setPosition(0.65);
+                    } else {
+                        motorColectSt.setPower(0);
+                        motorColectDr.setPower(0);
                     }
-                    alast2 = abut2;
                 }
+                alast2 = abut2;
+            }
 
-                boolean abut3 = gamepad2.y;
-                if (alast3 != abut3) {
-                    if (gamepad2.y) {
-                        apoz3 = !apoz3;
-                        if (apoz3) {
-                            servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
-                        } else {
-                            servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
-                        }
+            boolean abut3 = gamepad2.y;
+            if (alast3 != abut3) {
+                if (gamepad2.y) {
+                    apoz3 = !apoz3;
+                    if (apoz3) {
+                        servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+                    } else {
+                        servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
                     }
-                    alast3 = abut3;
                 }
+                alast3 = abut3;
+            }
 
-                /**closing the clamp automatically and stopping the cube collecting motors when the claw's switch is pressed by the cube */
-                if(touchGheara.isPressed() && motorColectDr.getPower() != 0){
-                    servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
-                    motorColectSt.setPower(0);
-                    motorColectDr.setPower(0);
-                    apoz3 = true;
-                }
+            /**closing the clamp automatically and stopping the cube collecting motors when the claw's switch is pressed by the cube */
+            if (touchGheara.isPressed() && motorColectDr.getPower() != 0) {
+                servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
+                motorColectSt.setPower(0);
+                motorColectDr.setPower(0);
+                apoz3 = true;
+            }
 
 
-               powerSlider = gamepad2.right_stick_y;
-                if (powerSlider != 0) {
-                    vexDr.setPosition(0.5 + powerSlider / 2);
-                    vexSt.setPosition(0.5 - powerSlider / 2);
-                }
-                else {
-                    vexDr.setPosition(0.5);
-                    vexSt.setPosition(0.5);
-                }
+            powerSlider = gamepad2.right_stick_y;
+            if (powerSlider != 0) {
+                vexDr.setPosition(0.5 + powerSlider / 2);
+                vexSt.setPosition(0.5 - powerSlider / 2);
+            } else {
+                vexDr.setPosition(0.5);
+                vexSt.setPosition(0.5);
+            }
 
-                if (gamepad1.dpad_down) {
-                    servoPlatformaDr.setPosition(0);
-                    servoPlatformaSt.setPosition(1);
-                } else if (gamepad1.dpad_up) {
-                    servoPlatformaDr.setPosition(1);
-                    servoPlatformaSt.setPosition(0);
-                }
+            if (gamepad1.dpad_down) {
+                servoPlatformaDr.setPosition(0);
+                servoPlatformaSt.setPosition(1);
+            } else if (gamepad1.dpad_up) {
+                servoPlatformaDr.setPosition(1);
+                servoPlatformaSt.setPosition(0);
+            }
 
-                if(gamepad1.left_trigger > 0 && servoParcarePosition < 1){
-                    servoParcarePosition += gamepad1.left_trigger/40;
-                   // servoParcare.setPosition(servoParcarePosition);
-                }
-                else if(gamepad1.right_trigger > 0 && servoParcarePosition > 0.4){
-                    servoParcarePosition -= gamepad1.right_trigger/40;
-                    //servoParcare.setPosition(servoParcarePosition);
-                }
+            if (gamepad1.left_trigger > 0 && servoParcarePosition < 1) {
+                servoParcarePosition += gamepad1.left_trigger / 40;
+                // servoParcare.setPosition(servoParcarePosition);
+            } else if (gamepad1.right_trigger > 0 && servoParcarePosition > 0.4) {
+                servoParcarePosition -= gamepad1.right_trigger / 40;
+                //servoParcare.setPosition(servoParcarePosition);
+            }
 
-                servoCapstone.setPosition((gamepad2.right_trigger) / 2);
+            servoCapstone.setPosition((gamepad2.right_trigger) / 2);
+        }
+
+    });
+
+    private Thread Chassis = new Thread(() -> {
+        /**repeat until the program stops*/
+        while (!stop) {
+            if (gamepad1.right_bumper) {
+                v = 1;
+            } else if (gamepad1.left_bumper) {
+                v = 2;
+            }
+            /**getting the gamepad joystick values*/
+            forward = -gamepad1.left_stick_y;
+            right = gamepad1.left_stick_x;
+            clockwise = -gamepad1.right_stick_x;
+            /**limiting the power for the chassis expansionhub*/
+            if (expansionHubSistemeCurrent > 5) {
+                powerLimit = expansionHubOdometrieCurrent > 2 ? 2 / expansionHubOdometrieCurrent : 1;
+            } else {
+                powerLimit = 1;
+            }
+
+            /**calculating the power for motors */
+
+            df = (forward + clockwise - right) * powerLimit;
+            ss = (forward - clockwise - right) * powerLimit;
+            sf = (-forward + clockwise - right) * powerLimit;
+            ds = (-forward - clockwise - right) * powerLimit;
+
+            /**normalising the power values*/
+            max = abs(sf);
+            if (abs(ds) > max) {
+                max = abs(ds);
+            }
+            if (abs(df) > max) {
+                max = abs(df);
+            }
+            if (abs(ss) > max) {
+                max = abs(ss);
+            }
+            if (max > 1) {
+                sf /= max;
+                df /= max;
+                ss /= max;
+                ds /= max;
+            }
+            /** setting the speed of the chassis*/
+            if (v == 1) {
+                POWER(df / 2.2, sf / 2.2, ds / 2.2, ss / 2.2);
+            } else if (v == 2) {
+                POWER(df, sf, ds, ss);
             }
         }
     });
-
-    private Thread Chassis = new Thread( new Runnable() {
-        @Override
-        public void run() {
-            /**repeat until the program stops*/
-            while (!stop) {
-                if (gamepad1.right_bumper) {
-                    v = 1;
-                } else if (gamepad1.left_bumper) {
-                    v = 2;
-                }
-                /**getting the gamepad joystick values*/
-                forward = -gamepad1.left_stick_y;
-                right = gamepad1.left_stick_x;
-                clockwise = -gamepad1.right_stick_x;
-                /**limiting the power for the chassis expansionhub*/
-                if(expansionHubSistemeCurrent > 5){
-                    powerLimit = expansionHubOdometrieCurrent > 2 ? 2/expansionHubOdometrieCurrent : 1;
-                }
-                else{
-                    powerLimit = 1;
-                }
-
-                /**calculating the power for motors */
-
-                df = (forward + clockwise - right) * powerLimit;
-                ss = (forward - clockwise - right) * powerLimit;
-                sf = (-forward + clockwise - right) * powerLimit;
-                ds = (-forward - clockwise - right) * powerLimit;
-
-                /**normalising the power values*/
-                max = abs(sf);
-                if (abs(ds) > max) {
-                    max = abs(ds);
-                }
-                if (abs(df) > max) {
-                    max = abs(df);
-                }
-                if (abs(ss) > max) {
-                    max = abs(ss);
-                }
-                if (max > 1) {
-                    sf /= max;
-                    df /= max;
-                    ss /= max;
-                    ds /= max;
-                }
-                /** setting the speed of the chassis*/
-                if (v == 1) {
-                    POWER(df / 2.2, sf / 2.2, ds / 2.2, ss / 2.2);
-                } else if (v == 2) {
-                    POWER(df, sf, ds, ss);
-                }
-            }
-        }
-    });
-/**measure the current draw for each of expansionHub*/
-    private Thread current = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while(!stop){
-                expansionHubSistemeCurrent = expansionHubSisteme.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
-                expansionHubOdometrieCurrent = expansionHubOdometrie.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
-            }
+    /**
+     * measure the current draw for each of expansionHub
+     */
+    private Thread current = new Thread(() -> {
+        while (!stop) {
+            expansionHubSistemeCurrent = expansionHubSisteme.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
+            expansionHubOdometrieCurrent = expansionHubOdometrie.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
         }
     });
 
-   /* public Thread automation = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while (!stop) {
-                if (touchGheara.isPressed()) {
-                    apoz3 = false;
-                    servoClamp.setPosition(1);
-                    motorColectDr.setPower(0);
-                    motorColectSt.setPower(0);
-                }
-            }
-        }
-    });*/
+    /* public Thread automation = new Thread(new Runnable() {
+         @Override
+         public void run() {
+             while (!stop) {
+                 if (touchGheara.isPressed()) {
+                     apoz3 = false;
+                     servoClamp.setPosition(1);
+                     motorColectDr.setPower(0);
+                     motorColectSt.setPower(0);
+                 }
+             }
+         }
+     });*/
     @Override
     public void init() {
         /**initialization motors*/
@@ -245,20 +244,20 @@ public class TeleOp_Colect extends OpMode {
         motorColectDr = hardwareMap.get(DcMotor.class, configs.colectDrName);
         motorColectSt = hardwareMap.get(DcMotor.class, configs.colectStName);
 
-        scissorDreapta = hardwareMap.get(DcMotorEx.class,configs.scissorDrName);
-        scissorStanga = hardwareMap.get(DcMotorEx.class,configs.scissorStName);
+        scissorDreapta = hardwareMap.get(DcMotorEx.class, configs.scissorDrName);
+        scissorStanga = hardwareMap.get(DcMotorEx.class, configs.scissorStName);
 
-        servoClamp = hardwareMap.get(ServoImplEx.class,configs.servoClampName);
+        servoClamp = hardwareMap.get(ServoImplEx.class, configs.servoClampName);
         servoPlatformaDr = hardwareMap.servo.get(configs.servoPlatformaDrName);
         servoPlatformaSt = hardwareMap.servo.get(configs.servoPlatformaStName);
         servoCapstone = hardwareMap.servo.get(configs.servoCapstoneName);
         pot = hardwareMap.analogInput.get(configs.potentiometruName);
-       // servoParcare = hardwareMap.servo.get("parcare");
+        // servoParcare = hardwareMap.servo.get("parcare");
 
         vexDr = hardwareMap.get(ServoImplEx.class, "vexDr");
         vexSt = hardwareMap.get(ServoImplEx.class, "vexSt");
 
-        touchGheara= hardwareMap.touchSensor.get(configs.touchGhearaName);
+        touchGheara = hardwareMap.touchSensor.get(configs.touchGhearaName);
         touchScissorDr = hardwareMap.touchSensor.get(configs.touchScissorDrName);
         touchScissorSt = hardwareMap.touchSensor.get(configs.touchScissorStName);
 
@@ -267,7 +266,7 @@ public class TeleOp_Colect extends OpMode {
         scissorDreapta.setDirection(DcMotorSimple.Direction.REVERSE);
         scissorStanga.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        servoClamp.setPwmRange(new PwmControl.PwmRange(750,2250));
+        servoClamp.setPwmRange(new PwmControl.PwmRange(750, 2250));
         vexDr.setPwmRange(new PwmControl.PwmRange(1000, 2000));
         vexSt.setPwmRange(new PwmControl.PwmRange(1000, 2000));
 
@@ -288,10 +287,10 @@ public class TeleOp_Colect extends OpMode {
         motorsf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorss.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        sysTime= System.currentTimeMillis();
+        sysTime = System.currentTimeMillis();
         servoClamp.setPosition(0.7);
         servoCapstone.setPosition(0.5);
-      //  servoParcare.setPosition(servoParcarePosition);
+        //  servoParcare.setPosition(servoParcarePosition);
         /**start the thread*/
         Colect.start();
         Chassis.start();
@@ -301,25 +300,29 @@ public class TeleOp_Colect extends OpMode {
         //automation.start();
     }
 
-    /**using the loop function to send the telemetry to the phone */
+    /**
+     * using the loop function to send the telemetry to the phone
+     */
     @Override
     public void loop() {
         telemetry.addData("TouchscDr", touchScissorDr.isPressed());
         telemetry.addData("TouchscSt", touchScissorSt.isPressed());
         telemetry.addData("TouchGh", touchGheara.isPressed());
-        telemetry.addData("scSt",scissorStanga.getCurrentPosition() - scissorStangaOffset);
-        telemetry.addData("power df: ",motordf.getPower());
+        telemetry.addData("scSt", scissorStanga.getCurrentPosition() - scissorStangaOffset);
+        telemetry.addData("power df: ", motordf.getPower());
         telemetry.addData("potentiometru", pot.getVoltage());
         telemetry.update();
     }
 
-    /**using the stop function to stop the thread*/
+    /**
+     * using the stop function to stop the thread
+     */
     public void stop() {
         stop = true;
     }
 
     /**
-     the power function sets the motor's power
+     * the power function sets the motor's power
      */
     public void POWER(double df1, double sf1, double ds1, double ss1) {
         motordf.setPower(df1);
