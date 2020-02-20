@@ -79,6 +79,7 @@ public class AutoRed_v1 extends LinearOpMode {
             telemetry.update();
         }
 
+
         waitForStart();
         /** primul cub */
         drive.startColect();
