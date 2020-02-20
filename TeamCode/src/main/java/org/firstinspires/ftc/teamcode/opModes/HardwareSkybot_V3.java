@@ -50,7 +50,6 @@ public class HardwareSkybot_V3 extends LinearOpMode {
         servoPlatformaDr = hard.servo.get(configs.servoPlatformaDrName);
         servoPlatformaSt = hard.servo.get(configs.servoPlatformaStName);
         servoCapstone = hard.servo.get(configs.servoCapstoneName);
-        servoParcare = hard.servo.get(configs.servoParcareName);
 
         motordf.setPower(0);
         motords.setPower(0);

@@ -11,7 +11,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
-@TeleOp
+
 public class Pid_Brat extends LinearOpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     private double delta,enc,startTime,timeChange,lastTime,deltaSum,Power,lastDelta,dDelta;

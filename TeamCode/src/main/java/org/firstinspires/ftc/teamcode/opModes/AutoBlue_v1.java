@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
 @Autonomous
@@ -29,6 +28,11 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive = new SampleMecanumDriveREVOptimized(hardwareMap);
         drive.Init(hardwareMap);
         drive.setPoseEstimate(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)));
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                    .splineTo(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)))
+                    .build()
+        );
 
         pidCam.setSetpoint(100);
         pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
@@ -117,9 +121,11 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.Colect(0.5);
         asteptare(70);
         drive.Colect(-1);
+        drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
         systemTime = System.currentTimeMillis();
-        while (!drive.touchGheara.isPressed() && opModeIsActive() && (systemTime + 3000 > System.currentTimeMillis())) {
+        while (!drive.touchGheara.isPressed() && opModeIsActive() && (systemTime + 500 > System.currentTimeMillis())) {
         }
+        drive.setMotorPowers(0,0,0,0);
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         /**mers la placa cu ridicare de scissor */
         drive.followTrajectory(
@@ -228,12 +234,9 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.Colect(0.5);
         asteptare(70);
         drive.Colect(-1);
-        /***/
         systemTime = System.currentTimeMillis();
-        while (!drive.touchGheara.isPressed() && opModeIsActive() && (systemTime + 3000 > System.currentTimeMillis())) {
-            if (systemTime + 1000 > System.currentTimeMillis()) {
-                drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
-            }
+        drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
+        while (!drive.touchGheara.isPressed() && opModeIsActive() && (systemTime + 500 > System.currentTimeMillis())) {
         }
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         drive.setMotorPowers(0, 0, 0, 0);
@@ -246,7 +249,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                         .splineTo(new Pose2d(37 * 2.54, 48 * 2.54, Math.toRadians(-180)))
                         .build()
         );
-/***/
+
         isScissorExtended = false;
         isCubeThrown = false;
         while (drive.isBusy()) {
@@ -261,6 +264,8 @@ public class AutoBlue_v1 extends LinearOpMode {
                 isCubeThrown = true;
             }
         }
+
+
         if (cam.webcam.getFps() == 0) {
             drive.homeScissor();
             drive.followTrajectorySync(
@@ -350,18 +355,21 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.stop = true;
     }
 
-    /***/
+
     public Thread inFlightPipelineChange = new Thread(() -> {
         boolean isTerminated = false;
-        while (opModeIsActive() && !isTerminated) {
+        while (!isTerminated){
+            if(changePipeline){
+                cam.startDetection(new org.firstinspires.ftc.teamcode.opModes.StoneDetector(480, 640));
+                isTerminated = true;
+            }
         }
     });
 
-    /***/
+
     public void colectCub() {
         double power, camPower;
         drive.Colect(-1);
-        cam.startDetection(new org.firstinspires.ftc.teamcode.opModes.StoneDetector(480, 640));
         telemetry.update();
         while (!isCollected) {
             pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);

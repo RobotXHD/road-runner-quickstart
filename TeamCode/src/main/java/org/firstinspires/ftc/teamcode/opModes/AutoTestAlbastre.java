@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 
-@Autonomous
 public class AutoTestAlbastre extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
     Hardware_Scissor_V1 sisteme = new Hardware_Scissor_V1();

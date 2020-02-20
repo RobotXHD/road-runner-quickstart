@@ -53,8 +53,11 @@ public class Hardware_Cam extends LinearOpMode {
     }
     public void startDetection(DogeCVColorFilter filter){
         webcam.stopStreaming();
+        sleep(2000);
         skystoneDetectorModified.filter = filter;
+        sleep(2000);
         webcam.startStreaming(resWidth,resHeight,OpenCvCameraRotation.SIDEWAYS_LEFT);
+        sleep(2000);
     }
     public void stopDetection(){
         webcam.stopStreaming();

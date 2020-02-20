@@ -12,9 +12,6 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
-
-@TeleOp
-
 public class moto_moto_motorola extends OpMode {
     public FtcDashboard dashboard = FtcDashboard.getInstance();
     public DcMotorEx motordf;

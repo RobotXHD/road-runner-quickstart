@@ -15,8 +15,11 @@ public class configs {
     public static final double pozitie_servoPlatformaDr_maxim = 1;
     public static final double pozitie_servoPlatformaSt_maxim = 0.61;
     //desprindere
+    public static final double pozitie_servoParcareBlue_desprindere = 0.6;
     public static final double pozitie_servoClamp_desprindere = 0.4;
   //prindere
+    public static final double pozitie_servoParcareBlue_prindere = 0.76
+          ;
     public static final double pozitie_servoCapstone_prindere = 0.22;
     public static final double pozitie_servoClamp_prindere = 0.85;
 
@@ -42,7 +45,8 @@ public class configs {
     public static final String servoClampName = "clamp";
     public static final String vexDrName = "vexDr";
     public static final String vexStName = "vexSt";
-    public static final String servoParcareName = "parcare";
+    public static final String servoParcareBlueName = "parcareB";
+    public static final String servoParcareRedName = "parcareR";
     public static final String servoCapstoneName = "capstone";
     public static final String expansionHubOdometrieName = "Expansion Hub Odometrie";
     public static final String expansionHubSistemeName = "Expansion Hub Sisteme";

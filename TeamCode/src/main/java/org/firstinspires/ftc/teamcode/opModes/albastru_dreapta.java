@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Hardware;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
-@TeleOp
+
 public class albastru_dreapta extends LinearOpMode {
 
     @Override

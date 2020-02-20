@@ -27,12 +27,15 @@ public class AutoRed_v1 extends LinearOpMode {
         drive = new SampleMecanumDriveREVOptimized(hardwareMap);
         drive.Init(hardwareMap);
         drive.setPoseEstimate(new Pose2d(-38.52 * 2.54, -62.18 * 2.54, Math.toRadians(90)));
+
         pidCam.setSetpoint(100);
         pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
         pidCam.enable();
+
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
         telemetry.setMsTransmissionInterval(50);
 
+        /*
         Trajectory left1 = new TrajectoryBuilder(new Pose2d(-38.52 * 2.54, -62.18 * 2.54, Math.toRadians(90)), DriveConstants.BASE_CONSTRAINTS)
                 .setReversed(false)
                 .strafeTo(new Vector2d(-39 * 2.54, -60.66 * 2.54))
@@ -55,20 +58,23 @@ public class AutoRed_v1 extends LinearOpMode {
                 .lineTo(new Vector2d(-61 * 2.54, -26 * 2.54), new LinearInterpolator(Math.toRadians(135), Math.toRadians(0)))
                 .build();
 
+
+         */
         /** detection */
         inFlightPipelineChange.start();
+        //TODO: de recalibrat valorile pentru the best
         while (!isStarted()) {
             telemetry.addData("Ceva: ", cam.skystoneDetectorModified.foundScreenPositions().get(0).x);
 
-            if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x >= 156) {
-                telemetry.addData("Position", "Left");
-                caz = -1;
-            } else if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x > 38) {
+            if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x >= 200) {
                 telemetry.addData("Position", "Right");
                 caz = 1;
-            } else {
+            } else if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x > 50) {
                 telemetry.addData("Position", "Center");
                 caz = 0;
+            } else {
+                telemetry.addData("Position", "Left");
+                caz = -1;
             }
             telemetry.update();
         }
@@ -178,7 +184,7 @@ public class AutoRed_v1 extends LinearOpMode {
             drive.followTrajectory(
                     drive.trajectoryBuilder()
                             .setReversed(false)
-                            .splineTo(new Pose2d(15 * 2.54,- 38 * 2.54, Math.toRadians(180)))
+                            .splineTo(new Pose2d(15 * 2.54,-38 * 2.54, Math.toRadians(180)))
                             .splineTo(new Pose2d(-28 * 2.54, -37 * 2.54, Math.toRadians(135)))
                             .lineTo(new Vector2d(-28 * 2.54, -31 * 2.54), new LinearInterpolator(Math.toRadians(135), Math.toRadians(0)))
                             .lineTo(new Vector2d(-34 * 2.54, -26 * 2.54), new LinearInterpolator(Math.toRadians(135), Math.toRadians(0)))
@@ -247,38 +253,6 @@ public class AutoRed_v1 extends LinearOpMode {
         }
         drive.homeScissor();
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(15, -38 * 2.54, Math.toRadians(180)))
-                        .splineTo(new Pose2d(0, -38 * 2.54, Math.toRadians(180)))
-                        .splineTo(new Pose2d(-50, -38 * 2.54, Math.toRadians(140)))
-                        .build()
-        );
-        drive.homeScissor();
-        while(drive.isBusy()){
-            drive.update();
-            drive.updatePoseEstimate();
-        }
-
-        colectCub();
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .setReversed(true)
-                        .splineTo(new Pose2d(-15 * 2.54, -38 * 2.54, Math.toRadians(180)))
-                        .splineTo(new Pose2d(10 * 2.54, -38 * 2.54, Math.toRadians(180)))
-                        .splineTo(new Pose2d(38 * 2.54, -55 * 2.54, Math.toRadians(180)))
-                        .build()
-        );
-        drive.extensieScissor();
-        drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
-        asteptare(500);
-        drive.homeScissor();
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .setReversed(false)
-                        .splineTo(new Pose2d(0, -38 * 2.54, Math.toRadians(180)))
-                        .build()
-        );
         drive.stop = true;
     }
 

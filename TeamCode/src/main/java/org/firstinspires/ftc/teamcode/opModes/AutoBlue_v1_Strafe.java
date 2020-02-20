@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
-@Autonomous
 public class AutoBlue_v1_Strafe extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
     PIDControllerAdevarat pidCam = new PIDControllerAdevarat(0, 0, 0);

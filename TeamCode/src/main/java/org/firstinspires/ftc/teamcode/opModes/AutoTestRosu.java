@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
 
-@Autonomous
 public class AutoTestRosu extends LinearOpMode {
     Hardware_Cam cam = new Hardware_Cam();
     SampleMecanumDriveBase drive = new SampleMecanumDriveREVOptimized(hardwareMap);

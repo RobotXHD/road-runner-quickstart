@@ -14,7 +14,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
-@TeleOp
+
 public class TeleOP_BulkUtilities extends OpMode {
 
     FtcDashboard dashboard = FtcDashboard.getInstance();

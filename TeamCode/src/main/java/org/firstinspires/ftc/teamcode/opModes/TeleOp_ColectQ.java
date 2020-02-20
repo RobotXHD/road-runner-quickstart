@@ -15,7 +15,6 @@ import org.openftc.revextensions2.ExpansionHubEx;
 
 import static java.lang.Math.abs;
 
-@TeleOp
 public class TeleOp_ColectQ extends OpMode {
     /**
      * declare the motors

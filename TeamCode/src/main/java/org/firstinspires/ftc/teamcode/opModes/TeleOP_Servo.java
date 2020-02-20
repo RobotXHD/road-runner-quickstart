@@ -12,7 +12,7 @@ public class TeleOP_Servo extends OpMode {
 
     @Override
     public void init() {
-        servoPlatformaDr = hardwareMap.get(ServoImplEx.class,configs.servoParcareName);
+        servoPlatformaDr = hardwareMap.get(ServoImplEx.class,configs.servoParcareBlueName);
      //   servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
         systime= System.currentTimeMillis();
         Servo.start();
@@ -66,11 +66,11 @@ public class TeleOP_Servo extends OpMode {
                 systime= System.currentTimeMillis();
             }
             else if(gamepad1.dpad_down){
-                servoPlatformaDr.setPosition(0);
+                servoPlatformaDr.setPosition(0.76);
                 systime= System.currentTimeMillis();
             }
             else if (gamepad1.dpad_up) {
-                servoPlatformaDr.setPosition(0.26);
+                servoPlatformaDr.setPosition(0.6);
                 systime= System.currentTimeMillis();
             }
             }}

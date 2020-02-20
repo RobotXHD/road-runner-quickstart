@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import static java.lang.Math.PI;
 
-@Autonomous
+
 public class DubiousTest extends LinearOpMode {
     HardwareSkybot_V2 r = new HardwareSkybot_V2( true);
     @Override
