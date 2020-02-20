@@ -70,12 +70,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ElapsedTime period = new ElapsedTime();
 
 
-
-
-
-
-
-
     public void Init(HardwareMap hardwareMap) {
 
 
@@ -155,20 +149,25 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         motorColectDr.setPower(1);
         motorColectSt.setPower(1);
     }
-    public void Colect(double power){
+
+    public void Colect(double power) {
         motorColectDr.setPower(power);
         motorColectSt.setPower(power);
     }
 
+    public void protectiePlate() {
+        servoPlatformaDr.setPosition(configs.pozitie_servoPlatformaDr_pliere);
+        servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_pliere);
+    }
+
     public void prindrePlate() {
-        servoPlatformaDr.setPosition(0.16);
-        servoPlatformaSt.setPosition(0.77);
+        servoPlatformaDr.setPosition(configs.pozitie_servoPlatformaDr_prindere);
+        servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_prindere);
     }
 
     public void desprindrePlate() {
-        servoPlatformaDr.setPosition(0.27);
-        servoPlatformaSt.setPosition(0.66);
-
+        servoPlatformaDr.setPosition(configs.pozitie_servoPlatformaDr_desprindere);
+        servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_desprindere);
     }
 
     public void goPodRulant(double position) {
@@ -195,19 +194,18 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             vexDr.setPosition(podPerfomPid + 0.5);
             vexSt.setPosition(-podPerfomPid + 0.5);
 
-            if(Math.abs(potSpeed) > 0.5 && (potentiometruValue < 500 || potentiometruValue > 2000)){
+            if (Math.abs(potSpeed) > 0.5 && (potentiometruValue < 500 || potentiometruValue > 2000)) {
                 isMoving = true;
             }
-            if(isMoving && Math.abs(potSpeed) < 0.1 || pidPod.onTarget()){
+            if (isMoving && Math.abs(potSpeed) < 0.1 || pidPod.onTarget()) {
                 verificationPod++;
-            }
-            else{
+            } else {
                 verificationPod = 0;
             }
         } while (verificationPod < Automatizari_config.targetVerifications);
         vexSt.setPosition(0.5);
         vexDr.setPosition(0.5);
-        if(pidPod.getSetpoint() == 0){
+        if (pidPod.getSetpoint() == 0) {
             isOffseted = true;
         }
     }
@@ -248,20 +246,19 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                 }
             }
 
-            if(Math.abs(potSpeed) > 0.5){
+            if (Math.abs(potSpeed) > 0.5) {
                 isMoving = true;
             }
-            if(isMoving && Math.abs(potSpeed) < 0.2 || pidPod.onTarget()){
+            if (isMoving && Math.abs(potSpeed) < 0.2 || pidPod.onTarget()) {
                 verificationPod++;
-            }
-            else{
+            } else {
                 verificationPod = 0;
             }
 
         } while (verificationPod < Automatizari_config.targetVerifications);
         vexSt.setPosition(0.5);
         vexDr.setPosition(0.5);
-        if(pidPod.getSetpoint() == 0){
+        if (pidPod.getSetpoint() == 0) {
             isOffseted = true;
         }
 
@@ -283,10 +280,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         pidScissorDr.enable();
         pidScissorDr.setSetpoint(position);
         pidScissorDr.performPID(encoderDreapta);
-        if(pidScissorDr.getSetpoint() == 0){
+        if (pidScissorDr.getSetpoint() == 0) {
             powerSc = -0.7;
-        }
-        else{
+        } else {
             powerSc = 0;
         }
 
@@ -295,10 +291,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             updatePoseEstimate();
         }
         waitForTick(300);
-        if(pidScissorDr.getSetpoint() == 0){
+        if (pidScissorDr.getSetpoint() == 0) {
             pidScissorDr.disable();
         }
-        while(!touchScissorDr.isPressed() && !touchScissorSt.isPressed()){
+        while (!touchScissorDr.isPressed() && !touchScissorSt.isPressed()) {
 
         }
     }
@@ -342,13 +338,21 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
 */
-   /***/
-   public void extensieScissor(double triggerTICK){
-       NOTDUCK = true;
-       goScissorAgr(680);
-       goPodRulant(1500, triggerTICK, configs.pozitie_servoClamp_desprindere);
-   }
-    public void aruncaCuburi(){
+
+    /***/
+    public void extensieScissor(double triggerTICK) {
+        NOTDUCK = true;
+        goScissorAgr(700);
+        goPodRulant(1500, triggerTICK, configs.pozitie_servoClamp_desprindere);
+    }
+
+    public void extensieScissor2(double triggerTICK) {
+        NOTDUCK = true;
+        goScissorAgr(800);
+        goPodRulant(1500, triggerTICK, configs.pozitie_servoClamp_desprindere);
+    }
+
+    public void aruncaCuburi() {
         NOTDUCK = true;
         goScissorAgr(700);
         goPodRulant(3000, 1700, configs.pozitie_servoClamp_desprindere);
@@ -357,15 +361,17 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         NOTDUCK = false;
     }
 
-    public void extensieScissor(){
+    public void extensieScissor() {
         NOTDUCK = true;
-        goScissorAgr(680);
+        goScissorAgr(700);
         goPodRulant(2000);
     }
 
-    public void homeScissor(){
+    public void homeScissor() {
+        startColectReverse();
         goPodRulant(0);
         goScissor(0);
+        stopColect();
         NOTDUCK = false;
     }
 
@@ -375,7 +381,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         @Override
         public void run() {
             while (!stop) {
-                if(NOTDUCK) {
+                if (NOTDUCK) {
                     pot = potentiometru.getVoltage() * 1000 - offsetBridge;
                     lastTime = time;
                     lastPotVal = potentiometruValue;
@@ -386,7 +392,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                     }
                     potSpeed = (pot - lastPotVal) / (time - lastTime) * 1000000;
                     waitForTick(50);
-                    if(isOffseted || firstCycle){
+                    if (isOffseted || firstCycle) {
                         isOffseted = false;
                         firstCycle = false;
                         offsetBridge = pot;
@@ -402,7 +408,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         @Override
         public void run() {
             while (!stop) {
-                if(NOTDUCK) {
+                if (NOTDUCK) {
                     d = scissorStanga.getCurrentPosition();
                     if (touchScissorDr.isPressed() || touchScissorSt.isPressed()) {
                         scissorStangaOffset = d;
@@ -449,13 +455,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
         }
     });
-
-
-
-
-
-
-
 
 
     public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap) {
@@ -558,10 +557,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;
     }
-
-
-
-
 
 
     public void waitForTick(long periodMs) {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -25,10 +26,13 @@ public class AutoSkystone extends LinearOpMode {
         drive.pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         waitForStart();
-        drive.NOTDUCK = true;
+        drive.setPoseEstimate(new Pose2d(-38.52 * 2.54, 62.18 * 2.54, Math.toRadians(-90)));
         sysTime = System.currentTimeMillis();
-        drive.extensieScissor(750);
-        drive.homeScissor();
+        while(opModeIsActive()){
+            drive.update();
+            telemetry.addData("Pos", drive.getPoseEstimate());
+            telemetry.update();
+        }
         /*
         while (opModeIsActive()) {
             drive.pidPod.setPID(Automatizari_config.kpPod, Automatizari_config.kiPod, Automatizari_config.kdPod);

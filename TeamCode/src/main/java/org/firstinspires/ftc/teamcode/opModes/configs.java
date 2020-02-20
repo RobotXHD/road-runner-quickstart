@@ -5,21 +5,23 @@ public class configs {
     public static final double pozitie_servoRot_minim = 0.06;
     public static final double pozitie_servorSj_minim = 0.08;
     public static final double pozitie_servoMonster_minim = 0.11;
-    public static final double pozitie_servoPlatformaDr_minim = 0.33;
-    public static final double pozitie_servoPlatformaSt_minim = 0.97;
 
     //pozitii maxime
-    public static final double pozitie_servoRot_maxim= 0.8;
+    public static final double pozitie_servoRot_maxim = 0.8;
     public static final double pozitie_servorSj_maxim = 0.71;
     public static final double pozitie_servoMonster_maxim = 0.86;
-    public static final double pozitie_servoPlatformaDr_maxim = 1;
-    public static final double pozitie_servoPlatformaSt_maxim = 0.61;
     //desprindere
     public static final double pozitie_servoParcareBlue_desprindere = 0.6;
     public static final double pozitie_servoClamp_desprindere = 0.4;
-  //prindere
-    public static final double pozitie_servoParcareBlue_prindere = 0.76
-          ;
+    public static final double pozitie_servoPlatformaDr_desprindere = 0.83;
+    public static final double pozitie_servoPlatformaSt_desprindere = 0.20;
+    //pliere
+    public static final double pozitie_servoPlatformaDr_pliere = 0.3;
+    public static final double pozitie_servoPlatformaSt_pliere = 0.75;
+    //prindere
+    public static final double pozitie_servoPlatformaDr_prindere = 0.95;
+    public static final double pozitie_servoPlatformaSt_prindere = 0.06;
+    public static final double pozitie_servoParcareBlue_prindere = 0.76;
     public static final double pozitie_servoCapstone_prindere = 0.22;
     public static final double pozitie_servoClamp_prindere = 0.85;
 

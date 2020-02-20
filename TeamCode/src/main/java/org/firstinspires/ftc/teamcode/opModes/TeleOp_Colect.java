@@ -135,11 +135,11 @@ public class TeleOp_Colect extends OpMode {
             }
 
             if (gamepad1.dpad_down) {
-                servoPlatformaDr.setPosition(0);
-                servoPlatformaSt.setPosition(1);
+                servoPlatformaDr.setPosition(configs.pozitie_servoPlatformaDr_prindere);
+                servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_prindere);
             } else if (gamepad1.dpad_up) {
-                servoPlatformaDr.setPosition(1);
-                servoPlatformaSt.setPosition(0);
+                servoPlatformaDr.setPosition(configs.pozitie_servoPlatformaDr_pliere);
+                servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_pliere);
             }
 
             if (gamepad1.left_trigger > 0 && servoParcarePosition < 1) {
