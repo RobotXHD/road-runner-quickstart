@@ -142,12 +142,8 @@ public class TeleOp_Colect extends OpMode {
                 servoPlatformaSt.setPosition(configs.pozitie_servoPlatformaSt_pliere);
             }
 
-            if (gamepad1.left_trigger > 0 && servoParcarePosition < 1) {
-                servoParcarePosition += gamepad1.left_trigger / 40;
-                 servoParcareBlue.setPosition(servoParcarePosition);
-            } else if (gamepad1.right_trigger > 0 && servoParcarePosition > 0.4) {
-                servoParcarePosition -= gamepad1.right_trigger / 40;
-                servoParcareBlue.setPosition(servoParcarePosition);
+            if (gamepad2.left_trigger > 0.9 && servoParcarePosition < 1) {
+                 servoParcareBlue.setPosition(configs.pozitie_servoParcareBlue_desprindere);
             }
 
             servoCapstone.setPosition((gamepad2.right_trigger) / 2);
@@ -289,8 +285,8 @@ public class TeleOp_Colect extends OpMode {
         motorss.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         sysTime = System.currentTimeMillis();
-        servoClamp.setPosition(0.7);
-        servoCapstone.setPosition(0.5);
+        servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
+        servoCapstone.setPosition(configs.pozitie_servoCapstone_prindere);
         //  servoParcare.setPosition(servoParcarePosition);
         /**start the thread*/
         Colect.start();

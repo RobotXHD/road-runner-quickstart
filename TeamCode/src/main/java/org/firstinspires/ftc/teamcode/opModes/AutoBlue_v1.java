@@ -64,12 +64,7 @@ public class AutoBlue_v1 extends LinearOpMode {
 */
         /** detection */
         inFlightPipelineChange.start();
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .splineTo(new Pose2d(-38.52 * 2.54, 62 * 2.54, Math.toRadians(-90)))
-                        .build()
-        );
-        while (!isStarted()) {
+        while (!isStarted() && !isStopRequested()) {
             telemetry.addData("Ceva: ", cam.skystoneDetectorModified.foundScreenPositions().get(0).x);
             if (cam.skystoneDetectorModified.foundScreenPositions().get(0).x >= 156) {
                 telemetry.addData("Position", "Left");
@@ -160,7 +155,7 @@ public class AutoBlue_v1 extends LinearOpMode {
         while (drive.isBusy()) {
             drive.update();
             drive.updatePoseEstimate();
-            if (drive.getPoseEstimate().getY() < 31) {
+            if (drive.getPoseEstimate().getY() < 31.5) {
                 drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
             }
         }
@@ -190,19 +185,6 @@ public class AutoBlue_v1 extends LinearOpMode {
             drive.updatePoseEstimate();
         }
         drive.protectiePlate();
-
-        /*
-        drive.followTrajectorySync(
-                drive.trajectoryBuilder()
-                        .setReversed(false)
-                        .splineTo(new Pose2d(15 * 2.54, 38 * 2.54, Math.toRadians(-180)))
-                        .build()
-        );
-        drive.startColect();
-        drive.desprindrePlate();
-        sleep(500);
-
-         */
         drive.startColect();
         /** cub 2 */
         if (caz == 1) {
@@ -251,7 +233,7 @@ public class AutoBlue_v1 extends LinearOpMode {
         drive.servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
         drive.setMotorPowers(0, 0, 0, 0);
 
-        drive.followTrajectory(
+        drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(true)
                         .splineTo(new Pose2d(-12.5 * 2.54, 38 * 2.54, Math.toRadians(-180)))
@@ -262,38 +244,28 @@ public class AutoBlue_v1 extends LinearOpMode {
 
         isScissorExtended = false;
         isCubeThrown = false;
-        while (drive.isBusy()) {
-            drive.update();
-            drive.updatePoseEstimate();
-            if (!isScissorExtended && drive.getPoseEstimate().getX() > 12) {
-                drive.extensieScissor2(750);
-                isScissorExtended = true;
-            }
-            if (!isCubeThrown && drive.getPoseEstimate().getX() > 30) {
-                drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
-                isCubeThrown = true;
-            }
-        }
-
+        drive.extensieScissor2(750);
+        drive.servoClamp.setPosition(configs.pozitie_servoClamp_desprindere);
 
         if (cam.webcam.getFps() == 0) {
             drive.homeScissor();
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
+                            .setReversed(false)
                             .splineTo(new Pose2d(15, 38 * 2.54, Math.toRadians(-180)))
                             .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
                             .build()
             );
         } else {
+            drive.homeScissor();
             drive.followTrajectory(
                     drive.trajectoryBuilder()
+                            .setReversed(false)
                             .splineTo(new Pose2d(15, 38 * 2.54, Math.toRadians(-180)))
                             .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
                             .splineTo(new Pose2d(-50, 38 * 2.54, Math.toRadians(-140)))
                             .build()
             );
-            drive.homeScissor();
-            asteptare(1500);
             while (drive.isBusy()) {
                 drive.update();
                 drive.updatePoseEstimate();
@@ -316,8 +288,7 @@ public class AutoBlue_v1 extends LinearOpMode {
                                 .splineTo(new Pose2d(0, 38 * 2.54, Math.toRadians(-180)))
                                 .build()
                 );
-                drive.setMotorPowers(0,0,
-                        0,0);
+                drive.setMotorPowers(0,0,0,0);
             } else {
                 drive.followTrajectory(
                         drive.trajectoryBuilder()

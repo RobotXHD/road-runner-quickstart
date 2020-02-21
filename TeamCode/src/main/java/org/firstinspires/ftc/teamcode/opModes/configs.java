@@ -22,7 +22,7 @@ public class configs {
     public static final double pozitie_servoPlatformaDr_prindere = 0.95;
     public static final double pozitie_servoPlatformaSt_prindere = 0.06;
     public static final double pozitie_servoParcareBlue_prindere = 0.76;
-    public static final double pozitie_servoCapstone_prindere = 0.22;
+    public static final double pozitie_servoCapstone_prindere = 0.24;
     public static final double pozitie_servoClamp_prindere = 0.85;
 
     //levii
