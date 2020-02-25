@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.opModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,7 +16,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import static java.lang.Math.abs;
 
 @TeleOp
-public class TeleOp_Colect extends OpMode {
+public class TeleOp_ColectSputnik extends OpMode {
     /**
      * declare the motors and expansionHub and the servos
      */
@@ -92,8 +92,8 @@ public class TeleOp_Colect extends OpMode {
                 if (gamepad2.x) {
                     apoz2 = !apoz2;
                     if (apoz2 && !touchGheara.isPressed()) {
-                        motorColectSt.setPower(powerColect);
-                        motorColectDr.setPower(-powerColect);
+                        motorColectSt.setPower(0.3);
+                        motorColectDr.setPower(-0.3);
                         //         servoClamp.setPosition(0.65);
                     } else {
                         motorColectSt.setPower(0);
@@ -117,13 +117,6 @@ public class TeleOp_Colect extends OpMode {
             }
 
             /**closing the clamp automatically and stopping the cube collecting motors when the claw's switch is pressed by the cube */
-            if (touchGheara.isPressed() && motorColectDr.getPower() != 0) {
-                servoClamp.setPosition(configs.pozitie_servoClamp_prindere);
-                motorColectSt.setPower(0);
-                motorColectDr.setPower(0);
-                apoz3 = true;
-            }
-
 
             powerSlider = gamepad2.right_stick_y;
             if (powerSlider != 0) {
@@ -146,13 +139,7 @@ public class TeleOp_Colect extends OpMode {
                  servoParcareBlue.setPosition(configs.pozitie_servoParcareBlue_desprindere);
             }
 
-            if(gamepad2.right_trigger > 0.9){
-                servoCapstone.setPosition(0);
-            }
-            else{
-                servoCapstone.setPosition(configs.pozitie_servoCapstone_prindere
-                );
-            }
+            servoCapstone.setPosition((gamepad2.right_trigger) / 2);
         }
 
     });

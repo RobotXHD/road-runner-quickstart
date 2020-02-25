@@ -299,6 +299,24 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
     }
 
+    public void goPodRulant(double direction, double time){
+        long sysT = System.currentTimeMillis();
+        if(direction == 1){
+            vexDr.setPosition(1);
+            vexSt.setPosition(0);
+        }
+        else{
+            vexDr.setPosition(0);
+            vexSt.setPosition(1);
+        }
+        while(time + sysT > System.currentTimeMillis()){
+            update();
+            updatePoseEstimate();
+        }
+        vexDr.setPosition(0.5);
+        vexSt.setPosition(0.5);
+    }
+
    /* public void goCuburi(int cub) {
         //TODO: To stop scissor from crashing hard
         final int ROBOT_SAFE_DISTANCE = 700;
@@ -350,6 +368,19 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         NOTDUCK = true;
         goScissorAgr(800);
         goPodRulant(1500, triggerTICK, configs.pozitie_servoClamp_desprindere);
+    }
+
+    public void dubiousHome(){
+        goPodRulant(-1, 1300);
+        goScissor(0);
+        stopColect();
+        NOTDUCK = false;
+    }
+
+    public void dubiousExtensie(){
+        NOTDUCK = true;
+        goScissorAgr(800);
+        goPodRulant(1, 1300);
     }
 
     public void aruncaCuburi() {
@@ -459,6 +490,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap) {
         super();
+
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
