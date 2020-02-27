@@ -19,6 +19,7 @@ public class CorectieCosBrat extends OpMode {
         servoBrat = hardwareMap.get(ServoImplEx.class, "brat");
     }
 
+
     @Override
     public void loop() {
         pozPot = potentiometru.getVoltage() * 1000;
