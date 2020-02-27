@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @TeleOp
 public class TeleOP_Servo extends OpMode {
-    public ServoImplEx servoPlatformaDr, servoPlatformaSt;
+    public ServoImplEx servoPlatformaDr;//, servoPlatformaSt;
     public double systime;
     public boolean stop = false;
 
     @Override
     public void init() {
-        servoPlatformaDr = hardwareMap.get(ServoImplEx.class, configs.servoPlatformaDrName);
-        servoPlatformaSt = hardwareMap.get(ServoImplEx.class, configs.servoPlatformaStName);
+        servoPlatformaDr = hardwareMap.get(ServoImplEx.class, configs.servoCapstoneName);
+      //  servoPlatformaSt = hardwareMap.get(ServoImplEx.class, configs.servoPlatformaStName);
         //   servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
         systime = System.currentTimeMillis();
         Servo.start();
@@ -28,9 +28,9 @@ public class TeleOP_Servo extends OpMode {
         public void run() {
             while (!stop) {
                 if (systime + 200 < System.currentTimeMillis()) {
-                    if (gamepad1.dpad_left && pozStsus < 1) {
+                   /* if (gamepad1.dpad_left && pozStsus < 1) {
                         pozStsus += 0.01;
-                        servoPlatformaSt.setPosition(pozStsus);
+                       servoPlatformaSt.setPosition(pozStsus);
                         systime = System.currentTimeMillis();
                     } else if (gamepad1.dpad_right && pozStsus > 0.5) {
                         pozStsus -= 0.01;
@@ -46,7 +46,7 @@ public class TeleOP_Servo extends OpMode {
                         servoPlatformaSt.setPosition(pozStjos);
                         systime = System.currentTimeMillis();
                     }
-
+*/
 
                     if (gamepad1.a && pozDrsus <= 1) {
                         pozDrsus += 0.01;
@@ -75,7 +75,7 @@ public class TeleOP_Servo extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("dr: ", servoPlatformaDr.getPosition());
-        telemetry.addData("st", servoPlatformaSt.getPosition());
+      //  telemetry.addData("st", servoPlatformaSt.getPosition());
         telemetry.update();
     }
 

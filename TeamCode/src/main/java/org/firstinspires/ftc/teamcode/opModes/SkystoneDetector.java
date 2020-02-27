@@ -35,17 +35,17 @@ public class SkystoneDetector extends DogeCVColorFilter {
 
         Imgproc.GaussianBlur(input,input,new Size(7,7),0);
         Imgproc.cvtColor(input, grayscale, Imgproc.COLOR_RGB2GRAY);
-        Core.inRange(grayscale, new Scalar(22), new Scalar(57), grayscale);
+        Core.inRange(grayscale, new Scalar(0), new Scalar(30), grayscale);
         Imgproc.GaussianBlur(grayscale, grayscale, new Size(3,3), 0);
-        Imgproc.dilate(grayscale, grayscale, kernel, new Point(-1, -1),8);
+        Imgproc.dilate(grayscale, grayscale, kernel, new Point(-1, -1),10);
 
         Imgproc.cvtColor(input, lab, Imgproc.COLOR_RGB2Lab);
         Core.inRange(lab, new Scalar(0, configs.aMini, configs.bMini), new Scalar(255, configs.aMaxi, configs.bMaxi), lab);
         Imgproc.GaussianBlur(lab, lab, new Size(3,3), 0);
-        Imgproc.dilate(lab, lab, kernel, new Point(-1,-1),8);
+        Imgproc.dilate(lab, lab, kernel, new Point(-1,-1),10);
 
         Core.bitwise_and(lab, grayscale, mask);
-        Imgproc.dilate(mask, mask, kernel, new Point(-1, -1), 13);
+        Imgproc.dilate(mask, mask, kernel, new Point(-1, -1), 15);
         Core.bitwise_and(mask, maskTemp, mask);
 
         grayscale.release();
