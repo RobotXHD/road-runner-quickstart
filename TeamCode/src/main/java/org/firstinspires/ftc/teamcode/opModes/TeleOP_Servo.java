@@ -13,7 +13,7 @@ public class TeleOP_Servo extends OpMode {
 
     @Override
     public void init() {
-        servoPlatformaDr = hardwareMap.get(ServoImplEx.class, configs.servoCapstoneName);
+        servoPlatformaDr = hardwareMap.get(ServoImplEx.class, "brat");
       //  servoPlatformaSt = hardwareMap.get(ServoImplEx.class, configs.servoPlatformaStName);
         //   servoPlatformaDr.setPwmRange(new PwmControl.PwmRange(750, 2250));
         systime = System.currentTimeMillis();

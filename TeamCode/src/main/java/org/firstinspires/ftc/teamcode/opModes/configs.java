@@ -24,7 +24,12 @@ public class configs {
     public static final double pozitie_servoParcareBlue_prindere = 0.76;
     public static final double pozitie_servoCapstone_prindere = 0.31;
     public static final double pozitie_servoClamp_prindere = 0.85;
-
+    //orizontala
+    public static final double pozitie_servoBrat_orizontala = 0.99;
+    //verticala
+    public static final double pozitie_servoBrat_verticala =0.44;
+    //lungimea bratului mm
+    public static final double lungime_Brat_verticala = 17.9;
     //levii
     public static final int aMini = 120, aMaxi = 157;
     public static final int bMini = 162, bMaxi = 209;

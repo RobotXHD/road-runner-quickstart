@@ -406,6 +406,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         NOTDUCK = false;
     }
 
+
     private Thread readControl = new Thread(new Runnable() {
         double pot, offsetBridge = 0;
 
@@ -490,7 +491,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap) {
         super();
-
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
