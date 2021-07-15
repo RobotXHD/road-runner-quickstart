@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class configs {
     //pozitii minime
     public static final double pozitie_servoRot_minim = 0.06;
@@ -31,8 +34,17 @@ public class configs {
     //lungimea bratului mm
     public static final double lungime_Brat_verticala = 17.9;
     //levii
-    public static final int aMini = 120, aMaxi = 157;
-    public static final int bMini = 162, bMaxi = 209;
+    public static final int hMini = 55, hMaxi = 65;
+    public static final int sMini = 188, sMaxi = 188;
+    public static final int vMini = 255, vMaxi = 255;
+
+    public static int lMini = 120, lMaxi = 157;
+    public static int aMini = 120, aMaxi = 157;
+    public static int bbMini = 162, bbMaxi = 209;
+
+    public static final int rMini = 200, rMaxi = 200;
+    public static final int gMini = 200, gMaxi = 200;
+    public static final int bMini = 40, bMaxi = 40;
 
     public static final String dfName = "df";
     public static final String dsName = "ds";

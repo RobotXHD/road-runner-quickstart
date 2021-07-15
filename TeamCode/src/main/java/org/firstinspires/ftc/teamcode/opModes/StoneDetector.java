@@ -40,7 +40,8 @@ public class StoneDetector extends DogeCVColorFilter {
         Imgproc.rectangle(maskTemp, rect, new Scalar(255),-1);
 
         Imgproc.cvtColor(input, lab, Imgproc.COLOR_RGB2Lab);
-        Core.inRange(lab, new Scalar(0, configs.aMini, configs.bMini), new Scalar(255, configs.aMaxi, configs.bMaxi), lab);
+        Core.inRange(lab, new Scalar(configs.lMini, configs.aMini, configs.bbMini), new Scalar(configs.lMaxi, configs.aMaxi, configs.bbMaxi), lab);
+        //Core.inRange(lab, new Scalar(configs.rMini, configs.gMini, configs.bMini), new Scalar(configs.rMaxi, configs.gMaxi, configs.bMaxi), lab);
         Imgproc.GaussianBlur(lab, lab, new Size(3,3), 0);
         Imgproc.dilate(lab, lab, kernel, new Point(-1,-1),5);
 

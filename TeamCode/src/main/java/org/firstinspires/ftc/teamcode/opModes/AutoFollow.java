@@ -6,11 +6,14 @@ import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
 
 @Autonomous
 public class AutoFollow extends LinearOpMode {
@@ -21,8 +24,7 @@ public class AutoFollow extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        cam.Init(hardwareMap);
-
+        cam.Init(hardwareMap, new StoneDetector(new Point(0,0), new Point(640, 480)));
         pidCam.setSetpoint(100);
         pidCam.setPID(camConfig.kp, camConfig.ki, camConfig.kd);
         pidCam.enable();

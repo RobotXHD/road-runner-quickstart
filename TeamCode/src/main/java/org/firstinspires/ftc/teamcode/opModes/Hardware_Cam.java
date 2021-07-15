@@ -25,8 +25,8 @@ public class Hardware_Cam extends LinearOpMode {
 
     public OpenCvCamera webcam;
     private int resWidth = 640, resHeight = 480;
-    private Point p1 = new Point(280,0);//stanga sus
-    private Point p2 = new Point(resHeight-100,resWidth);//dreapta jos
+    private Point p1 = new Point(0,0);//stanga sus
+    private Point p2 = new Point(resHeight,resWidth);//dreapta jos
     public SkystoneDetectorModified skystoneDetectorModified = new SkystoneDetectorModified(p1, p2);
     public boolean isInitFinished = false;
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -48,7 +48,21 @@ public class Hardware_Cam extends LinearOpMode {
         webcam.openCameraDevice();
         webcam.setPipeline(skystoneDetectorModified);
         sleep(2000);
-        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.SIDEWAYS_LEFT);;
+        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.UPRIGHT);;
+        isInitFinished = true;
+    }
+
+    public void Init(HardwareMap hard, DogeCVColorFilter filter){
+        skystoneDetectorModified.stonesToFind = 1;
+        skystoneDetectorModified.useDefaults();
+        skystoneDetectorModified.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
+        skystoneDetectorModified.filter = filter;
+        int cameraMonitorViewId = hard.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hard.appContext.getPackageName());
+        webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        webcam.openCameraDevice();
+        webcam.setPipeline(skystoneDetectorModified);
+        sleep(2000);
+        webcam.startStreaming(resWidth, resHeight, OpenCvCameraRotation.UPRIGHT);;
         isInitFinished = true;
     }
     public void startDetection(){
